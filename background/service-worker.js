@@ -93,29 +93,33 @@ async function handleUpdate(previousVersion) {
  * Show update notification
  */
 function showUpdateNotification() {
-  chrome.notifications.create('update-notification', {
-    type: 'basic',
-    iconUrl: chrome.runtime.getURL('assets/icon128.png'),
-    title: 'TimeZone Converter Updated!',
-    message: 'Version 5.2.1: Better tooltip behavior and performance improvements.',
-    buttons: [
-      { title: 'See What\'s New' }
-    ],
-    priority: 1
-  });
+  if (chrome.notifications && chrome.notifications.create) {
+    chrome.notifications.create('update-notification', {
+      type: 'basic',
+      iconUrl: chrome.runtime.getURL('assets/icon128.png'),
+      title: 'TimeZone Converter Updated!',
+      message: 'Version 5.2.1: Better tooltip behavior and performance improvements.',
+      buttons: [
+        { title: 'See What\'s New' }
+      ],
+      priority: 1
+    });
+  }
 }
 
 /**
  * Handle notification button clicks
  */
-chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
-  if (notificationId === 'update-notification' && buttonIndex === 0) {
-    chrome.tabs.create({ 
-      url: chrome.runtime.getURL('welcome/welcome.html'),
-      active: true
-    });
-  }
-});
+if (chrome.notifications && chrome.notifications.onButtonClicked) {
+  chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
+    if (notificationId === 'update-notification' && buttonIndex === 0) {
+      chrome.tabs.create({ 
+        url: chrome.runtime.getURL('welcome/welcome.html'),
+        active: true
+      });
+    }
+  });
+}
 
 /**
  * Handle messages from content scripts or popup

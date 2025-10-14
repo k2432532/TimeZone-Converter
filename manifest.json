@@ -5,7 +5,8 @@
   "description": "Smart timezone converter - Select any text with time info to instantly convert between 100+ timezones. Features natural language detection.",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "notifications"
   ],
   "host_permissions": [
     "<all_urls>"
