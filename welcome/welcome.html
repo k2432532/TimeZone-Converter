@@ -13,7 +13,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
       min-height: 100vh;
       color: #333;
       line-height: 1.6;
@@ -28,9 +28,10 @@
     .welcome-card {
       background: white;
       border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       overflow: hidden;
       animation: slideIn 0.5s ease-out;
+      border: 2px solid #000;
     }
 
     @keyframes slideIn {
@@ -45,10 +46,11 @@
     }
 
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
       color: white;
       padding: 60px 40px;
       text-align: center;
+      border-bottom: 3px solid #333;
     }
 
     .header h1 {
@@ -59,7 +61,15 @@
 
     .header p {
       font-size: 18px;
-      opacity: 0.95;
+      opacity: 0.9;
+    }
+
+    .company-branding {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+      font-size: 14px;
+      opacity: 0.8;
     }
 
     .content {
@@ -71,12 +81,14 @@
     }
 
     .section h2 {
-      color: #667eea;
+      color: #000;
       font-size: 28px;
       margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 10px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
     }
 
     .section h2 .emoji {
@@ -92,18 +104,20 @@
       align-items: flex-start;
       margin-bottom: 25px;
       padding: 20px;
-      background: #f8f9fa;
+      background: #f5f5f5;
       border-radius: 12px;
       transition: transform 0.2s, box-shadow 0.2s;
+      border-left: 4px solid #000;
     }
 
     .step:hover {
       transform: translateX(5px);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      background: #e8e8e8;
     }
 
     .step-number {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #000000 0%, #333333 100%);
       color: white;
       width: 40px;
       height: 40px;
@@ -120,11 +134,11 @@
     .step-content h3 {
       font-size: 20px;
       margin-bottom: 8px;
-      color: #333;
+      color: #000;
     }
 
     .step-content p {
-      color: #666;
+      color: #555;
       font-size: 16px;
     }
 
@@ -136,15 +150,22 @@
     }
 
     .example-card {
-      background: #f8f9fa;
+      background: #f5f5f5;
       padding: 20px;
       border-radius: 12px;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid #000;
+      transition: transform 0.2s;
+    }
+
+    .example-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
     .example-card h4 {
-      color: #667eea;
+      color: #000;
       margin-bottom: 10px;
+      font-weight: 600;
     }
 
     .example-card code {
@@ -154,7 +175,8 @@
       border-radius: 6px;
       margin-top: 8px;
       font-family: 'Courier New', monospace;
-      color: #e83e8c;
+      color: #333;
+      border: 1px solid #ddd;
     }
 
     .features {
@@ -167,13 +189,16 @@
     .feature {
       text-align: center;
       padding: 20px;
-      background: #f8f9fa;
+      background: #f5f5f5;
       border-radius: 12px;
       transition: transform 0.2s;
+      border: 2px solid #e0e0e0;
     }
 
     .feature:hover {
       transform: translateY(-5px);
+      background: #e8e8e8;
+      border-color: #000;
     }
 
     .feature-icon {
@@ -182,8 +207,9 @@
     }
 
     .feature h4 {
-      color: #333;
+      color: #000;
       margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .feature p {
@@ -195,12 +221,13 @@
       text-align: center;
       margin-top: 40px;
       padding: 40px;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%);
       border-radius: 16px;
+      border: 2px solid #e0e0e0;
     }
 
     .cta h2 {
-      color: #667eea;
+      color: #000;
       margin-bottom: 20px;
     }
 
@@ -224,37 +251,40 @@
     }
 
     .button-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #000000 0%, #333333 100%);
       color: white;
+      border: 2px solid #000;
     }
 
     .button-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
     }
 
     .button-secondary {
       background: white;
-      color: #667eea;
-      border: 2px solid #667eea;
+      color: #000;
+      border: 2px solid #000;
     }
 
     .button-secondary:hover {
-      background: #667eea;
+      background: #000;
       color: white;
     }
 
     .demo-area {
       margin: 30px 0;
       padding: 25px;
-      background: #fff8dc;
+      background: #f9f9f9;
       border-radius: 12px;
-      border: 2px dashed #ffd700;
+      border: 2px dashed #999;
     }
 
     .demo-area h3 {
-      color: #ff6b6b;
+      color: #000;
       margin-bottom: 15px;
+      font-weight: 600;
     }
 
     .demo-text {
@@ -264,9 +294,10 @@
     }
 
     .demo-text .highlight {
-      background: linear-gradient(180deg, transparent 60%, #ffd700 60%);
+      background: linear-gradient(180deg, transparent 60%, #d0d0d0 60%);
       padding: 2px 4px;
       cursor: pointer;
+      font-weight: 500;
     }
 
     @media (max-width: 768px) {
@@ -296,106 +327,98 @@
       <div class="header">
         <h1>🌍 Welcome to Smart TimeZone Converter</h1>
         <p>Convert time zones instantly by simply selecting text on any webpage!</p>
+        <div class="company-branding">
+          A product by <strong>Latent</strong> — An <strong>Alpha OBS LLP</strong> Venture
+        </div>
       </div>
 
       <div class="content">
-        <!-- How to Use Section -->
+        <!-- How It Works Section -->
         <div class="section">
-          <h2><span class="emoji">🚀</span> How to Use</h2>
-          <ol class="steps">
+          <h2><span class="emoji">⚡</span> How It Works</h2>
+          <ul class="steps">
             <li class="step">
               <div class="step-number">1</div>
               <div class="step-content">
-                <h3>Select Text with Time Information</h3>
-                <p>Simply highlight any text on a webpage that contains time information. Click and drag to select, then release the mouse button.</p>
+                <h3>Select Text with Time</h3>
+                <p>Highlight any text containing date and time information on any webpage</p>
               </div>
             </li>
             <li class="step">
               <div class="step-number">2</div>
               <div class="step-content">
-                <h3>See Instant Conversion</h3>
-                <p>A tooltip will automatically appear showing the time converted to your preferred timezone. No clicks or keyboard shortcuts needed!</p>
+                <h3>Instant Detection</h3>
+                <p>Our AI automatically detects dates, times, and timezones from natural language</p>
               </div>
             </li>
             <li class="step">
               <div class="step-number">3</div>
               <div class="step-content">
-                <h3>Customize Your Settings</h3>
-                <p>Click the extension icon in your browser toolbar to set your preferred target timezone and toggle the extension on/off.</p>
+                <h3>See Conversion</h3>
+                <p>A tooltip appears instantly showing the time converted to your timezone</p>
               </div>
             </li>
-          </ol>
+          </ul>
+        </div>
+
+        <!-- Examples Section -->
+        <div class="section">
+          <h2><span class="emoji">💡</span> What You Can Convert</h2>
+          <div class="examples">
+            <div class="example-card">
+              <h4>Simple Times</h4>
+              <code>Meeting at 3pm EST</code>
+              <code>Call at 10:30 AM PST</code>
+            </div>
+            <div class="example-card">
+              <h4>Natural Language</h4>
+              <code>Tomorrow at 2pm EST</code>
+              <code>Next Monday 10am PST</code>
+            </div>
+            <div class="example-card">
+              <h4>Dates & Times</h4>
+              <code>Oct 15th at 3pm EST</code>
+              <code>2025-10-15 14:00 EST</code>
+            </div>
+            <div class="example-card">
+              <h4>Relative Times</h4>
+              <code>In 2 hours EST</code>
+              <code>30 mins from now PST</code>
+            </div>
+          </div>
         </div>
 
         <!-- Try It Now Section -->
         <div class="section">
-          <h2><span class="emoji">🎯</span> Try It Now!</h2>
+          <h2><span class="emoji">✨</span> Try It Now!</h2>
           <div class="demo-area">
-            <h3>👇 Select any of these examples to see it in action:</h3>
+            <h3>Select any time below to see it in action:</h3>
             <p class="demo-text">
-              The meeting is scheduled for <span class="highlight">3:30 PM EST tomorrow</span>. 
-              Our Tokyo office opens at <span class="highlight">9:00 AM JST</span>. 
-              The webinar starts at <span class="highlight">2pm Pacific Time</span>. 
-              Let's connect <span class="highlight">next Monday at 10am New York time</span>.
-              The deadline is <span class="highlight">in 2 hours EST</span>.
+              Our next team <span class="highlight">meeting is tomorrow at 3pm EST</span>. 
+              The product launch is scheduled for <span class="highlight">October 20, 2025 at 9am PST</span>. 
+              Don't forget the standup <span class="highlight">in 2 hours EST</span>!
             </p>
           </div>
         </div>
 
-        <!-- Supported Formats Section -->
+        <!-- Features Section -->
         <div class="section">
-          <h2><span class="emoji">✨</span> What It Detects</h2>
-          <div class="examples">
-            <div class="example-card">
-              <h4>Traditional Formats</h4>
-              <code>10:30 AM EST</code>
-              <code>14:00 GMT</code>
-              <code>3:45 PM PST</code>
-            </div>
-            <div class="example-card">
-              <h4>Natural Language</h4>
-              <code>tomorrow at 3pm EST</code>
-              <code>next Monday 10am PST</code>
-              <code>in 2 hours EST</code>
-            </div>
-            <div class="example-card">
-              <h4>City-Based Times</h4>
-              <code>3pm New York time</code>
-              <code>10am Tokyo time</code>
-              <code>2pm London time</code>
-            </div>
-            <div class="example-card">
-              <h4>UTC Offsets</h4>
-              <code>10:30 +05:30</code>
-              <code>2pm UTC+8</code>
-              <code>15:00 GMT-5</code>
-            </div>
-          </div>
-        </div>
-
-        <!-- Key Features Section -->
-        <div class="section">
-          <h2><span class="emoji">⭐</span> Key Features</h2>
+          <h2><span class="emoji">🎯</span> Key Features</h2>
           <div class="features">
             <div class="feature">
               <div class="feature-icon">🌐</div>
               <h4>100+ Timezones</h4>
-              <p>Support for all major world timezones and cities</p>
+              <p>Supports all major timezones worldwide</p>
             </div>
             <div class="feature">
-              <div class="feature-icon">🧠</div>
+              <div class="feature-icon">🤖</div>
               <h4>Smart Detection</h4>
-              <p>AI-powered detection with confidence scoring</p>
+              <p>Understands natural language and shortforms</p>
             </div>
             <div class="feature">
               <div class="feature-icon">⚡</div>
               <h4>Instant Results</h4>
-              <p>No clicks needed - just select and see</p>
-            </div>
-            <div class="feature">
-              <div class="feature-icon">🎨</div>
-              <h4>Clean Design</h4>
-              <p>Beautiful, non-intrusive tooltips</p>
+              <p>See conversions in milliseconds</p>
             </div>
             <div class="feature">
               <div class="feature-icon">🔒</div>
@@ -427,19 +450,6 @@
     </div>
   </div>
 
-  <script>
-    // Open settings when button is clicked
-    document.getElementById('openSettings').addEventListener('click', function() {
-      chrome.runtime.sendMessage({ action: 'openPopup' });
-    });
-
-    // Close tab
-    document.getElementById('closeTab').addEventListener('click', function() {
-      window.close();
-    });
-
-    // Save that welcome page has been shown
-    chrome.storage.local.set({ welcomeShown: true });
-  </script>
+  <script src="welcome.js"></script>
 </body>
 </html>
