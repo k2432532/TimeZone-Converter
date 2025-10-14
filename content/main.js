@@ -258,11 +258,13 @@
    * Process text for date/time detection
    */
   function processText(text, x, y, source) {
-    // Don't process if mouse is still down
-    if (isMouseDown) return;
+    console.log('[TZ Converter] Processing text:', { text, source, isMouseDown });
     
-    // Avoid reprocessing same text
-    if (text === lastProcessedText && tooltip) return;
+    // Avoid reprocessing same text (but allow re-processing if tooltip was closed)
+    if (text === lastProcessedText && tooltip && tooltip.parentNode) {
+      console.log('[TZ Converter] Skipping - already showing tooltip for this text');
+      return;
+    }
     
     lastProcessedText = text;
     
@@ -273,9 +275,11 @@
     }
     
     // Detect date/time pattern
+    console.log('[TZ Converter] Running detection on:', text);
     const detected = detector.detect(text);
     
     if (!detected || !detected.parsed) {
+      console.log('[TZ Converter] No date/time detected in text');
       hideTooltipImmediately();
       return;
     }
@@ -300,6 +304,7 @@
     const converted = converter.convert(detected.parsed, userTimezone);
     
     if (!converted) {
+      console.log('[TZ Converter] Conversion failed');
       hideTooltipImmediately();
       return;
     }
