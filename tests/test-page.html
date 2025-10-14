@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeZone Converter V5 - Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      opacity: 0.9;
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #ffd700;
+    }
+
+    .test-case {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .test-case:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(4px);
+    }
+
+    .test-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .test-content {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .instruction {
+      background: rgba(34, 197, 94, 0.2);
+      border-left: 4px solid #22c55e;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .instruction-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #ffd700;
+    }
+
+    ul {
+      margin-left: 24px;
+      margin-top: 12px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .highlight {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⏰ TimeZone Converter V5</h1>
+    <p class="subtitle">Professional Date/Time Detection & Conversion Testing</p>
+
+    <div class="instruction">
+      <div class="instruction-title">📝 How to Test</div>
+      <p>To test the extension, try the following methods:</p>
+      <ul>
+        <li><strong>Select text</strong>: Click and drag to select any time/date below</li>
+        <li><strong>Hover</strong>: Move your mouse over the text boxes</li>
+        <li><strong>Observe tooltip</strong>: Watch for the elegant tooltip appearing near your cursor</li>
+        <li><strong>Check accuracy</strong>: Verify the converted time matches your expected result</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>🕐 Time with Timezone Tests</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Test Case 1</div>
+        <div class="test-content">Let's do a call at Noon EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Test Case 2</div>
+        <div class="test-content">Let's do a call at 10:30 AM EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Test Case 3</div>
+        <div class="test-content">Let's do a call at 10 PM EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Test Case 4</div>
+        <div class="test-content">Let's do a call at 14:00 EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Test Case 5</div>
+        <div class="test-content">Let's do a call at 10 AM Eastern Time</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Test Case 6</div>
+        <div class="test-content">Let's do a call at 9 PM Pacific Time</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🌊 PST (Pacific Time) Tests</h2>
+      
+      <div class="test-case">
+        <div class="test-label">PST Test 1</div>
+        <div class="test-content">Let's do a call at Noon PST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">PST Test 2</div>
+        <div class="test-content">Let's do a call at 10:30 AM PST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">PST Test 3</div>
+        <div class="test-content">Let's do a call at 10 PM PST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">PST Test 4</div>
+        <div class="test-content">Meeting scheduled for 3:45 PM PST tomorrow</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📅 Date + Time Tests</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Full DateTime 1</div>
+        <div class="test-content">Event on Oct 15, 2025 at 2:30 PM EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Full DateTime 2</div>
+        <div class="test-content">Webinar: December 1, 2025 at 11:00 AM PST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">ISO Format</div>
+        <div class="test-content">Launch date: 2025-11-20 09:00 EST</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🌍 International Timezone Tests</h2>
+      
+      <div class="test-case">
+        <div class="test-label">UTC Test</div>
+        <div class="test-content">Conference call at 14:00 UTC</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">GMT Test</div>
+        <div class="test-content">London office opens at 9:00 AM GMT</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">IST Test</div>
+        <div class="test-content">Delhi team meeting at 10:30 AM IST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">JST Test</div>
+        <div class="test-content">Tokyo presentation at 3:00 PM JST</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔍 Edge Cases</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Midnight</div>
+        <div class="test-content">Server maintenance at midnight EST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">No Seconds</div>
+        <div class="test-content">Daily standup at 9:15 PST</div>
+      </div>
+
+      <div class="test-case">
+        <div class="test-label">Mixed Format</div>
+        <div class="test-content">The meeting is at 2 PM Eastern Time on Nov 5</div>
+      </div>
+    </div>
+
+    <div class="instruction">
+      <div class="instruction-title">✅ Expected Behavior</div>
+      <ul>
+        <li>Tooltip appears <span class="highlight">near your cursor/selection</span></li>
+        <li>Tooltip <span class="highlight">stays within viewport</span> (never goes off-screen)</li>
+        <li>Shows <span class="highlight">converted time</span> in your local timezone</li>
+        <li>Displays <span class="highlight">original time</span> for reference</li>
+        <li>Indicates <span class="highlight">assumptions</span> (e.g., "Date using today")</li>
+        <li>Has <span class="highlight">smooth animations</span></li>
+        <li>Adapts to <span class="highlight">dark/light mode</span></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>Smart TimeZone Converter V5.0.0</p>
+      <p>Built with ❤️ for global teams</p>
+    </div>
+  </div>
+
+  <script>
+    // Add console logging for debugging
+    console.log('[Test Page] Loaded - Ready for testing');
+    
+    // Log selection events
+    document.addEventListener('selectionchange', () => {
+      const selection = window.getSelection().toString();
+      if (selection) {
+        console.log('[Test Page] Text selected:', selection);
+      }
+    });
+  </script>
+</body>
+</html>

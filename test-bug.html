@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Detection Bug Test</title>
+  <script src="content/detector.js"></script>
+</head>
+<body>
+  <h1>Testing: "11 Oct 7 PM EST"</h1>
+  <div id="result"></div>
+  
+  <script>
+    const detector = new DateTimeDetector();
+    const testText = "Meeting on 11 Oct 7 PM EST";
+    
+    console.log("Testing text:", testText);
+    
+    const result = detector.detect(testText);
+    
+    console.log("Detection result:", result);
+    
+    if (result) {
+      document.getElementById('result').innerHTML = `
+        <h2>Result:</h2>
+        <pre>${JSON.stringify(result, null, 2)}</pre>
+        <h3>Matched Text:</h3>
+        <p>${result.matched}</p>
+        <h3>Pattern Type:</h3>
+        <p>${result.type}</p>
+        <h3>Parsed Data:</h3>
+        <pre>${JSON.stringify(result.parsed, null, 2)}</pre>
+      `;
+    } else {
+      document.getElementById('result').innerHTML = '<p>No match found!</p>';
+    }
+  </script>
+</body>
+</html>

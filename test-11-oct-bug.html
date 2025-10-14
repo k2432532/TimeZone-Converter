@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test: 11 Oct 7 PM EST Bug</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-case {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-input {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-left: 4px solid #007bff;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #e7f3ff;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .result-line {
+      margin: 5px 0;
+    }
+    .label {
+      font-weight: bold;
+      color: #0066cc;
+    }
+    .error {
+      background: #ffe7e7;
+      border-left: 4px solid #dc3545;
+    }
+    .success {
+      background: #e7ffe7;
+      border-left: 4px solid #28a745;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐛 Debug: "11 Oct 7 PM EST" Bug</h1>
+  <p><strong>Issue:</strong> Text shows "11 Oct 7 PM EST" but tooltip shows "Oct 10, 2025 7:00 PM"</p>
+  <p><strong>Today's Date:</strong> <span id="today"></span></p>
+
+  <div class="test-case">
+    <div class="test-input">
+      11 Oct 7 PM EST
+    </div>
+    <button onclick="testDetection()">🔍 Test Detection</button>
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script src="content/detector.js"></script>
+  <script>
+    // Display today's date
+    document.getElementById('today').textContent = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    function testDetection() {
+      const text = "11 Oct 7 PM EST";
+      const detector = new DateTimeDetector();
+      
+      console.log('Testing:', text);
+      const result = detector.detect(text);
+      
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      
+      if (result) {
+        // Display all the detection details
+        const parsed = result.parsed;
+        let html = `
+          <div class="result-line"><span class="label">✓ Pattern Matched:</span> ${result.type}</div>
+          <div class="result-line"><span class="label">Matched Text:</span> "${result.matched}"</div>
+          <div class="result-line"><span class="label">Confidence:</span> ${result.confidence}%</div>
+          <hr>
+          <div class="result-line"><span class="label">Parsed Date:</span> ${parsed.date ? `${parsed.date.year}-${String(parsed.date.month).padStart(2,'0')}-${String(parsed.date.day).padStart(2,'0')}` : 'No date'}</div>
+          <div class="result-line"><span class="label">Parsed Time:</span> ${parsed.time ? `${parsed.time.hours}:${String(parsed.time.minutes).padStart(2,'0')}` : 'No time'}</div>
+          <div class="result-line"><span class="label">Timezone:</span> ${parsed.timezone || 'No timezone'}</div>
+          <hr>
+          <div class="result-line"><span class="label">🎯 EXPECTED:</span> Oct 11, 2025 7:00 PM</div>
+          <div class="result-line ${parsed.date && parsed.date.day === 11 ? 'success' : 'error'}">
+            <span class="label">🔍 ACTUAL:</span> ${parsed.date ? `${getMonthName(parsed.date.month)} ${parsed.date.day}, ${parsed.date.year}` : 'No date'} ${parsed.time ? formatTime(parsed.time) : 'No time'}
+          </div>
+        `;
+        
+        resultDiv.innerHTML = html;
+        resultDiv.className = parsed.date && parsed.date.day === 11 ? 'result success' : 'result error';
+        
+        // Log full details to console
+        console.log('Detection Result:', result);
+        console.log('Parsed Object:', parsed);
+        
+      } else {
+        resultDiv.innerHTML = '<div class="error">❌ No match found!</div>';
+        resultDiv.className = 'result error';
+        console.error('No match found for:', text);
+      }
+    }
+
+    function getMonthName(monthNum) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return months[monthNum - 1];
+    }
+
+    function formatTime(time) {
+      const hours = time.hours > 12 ? time.hours - 12 : (time.hours === 0 ? 12 : time.hours);
+      const period = time.hours >= 12 ? 'PM' : 'AM';
+      const minutes = String(time.minutes).padStart(2, '0');
+      return `${hours}:${minutes} ${period}`;
+    }
+
+    // Auto-run test on load
+    window.onload = () => {
+      testDetection();
+    };
+  </script>
+</body>
+</html>

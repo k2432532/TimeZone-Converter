@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DateTime Detector V2.0 - Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .matched-text {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .confidence {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .confidence.high {
+            background: #10b981;
+            color: white;
+        }
+
+        .confidence.medium {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .confidence.low {
+            background: #ef4444;
+            color: white;
+        }
+
+        .detail-row {
+            display: flex;
+            margin: 5px 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 120px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .test-case {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .test-case:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .test-case-text {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DateTime Detector V2.0</h1>
+        <p class="subtitle">Test Suite - Smart Natural Language & Timezone Detection</p>
+
+        <!-- Custom Test Section -->
+        <div class="test-section">
+            <h2>🔬 Custom Test</h2>
+            <div class="input-group">
+                <label for="customInput">Enter your text:</label>
+                <textarea id="customInput" placeholder="Try: 'Meeting tomorrow at 3pm EST' or 'in 2 hours PST' or 'next Monday 10am'"></textarea>
+            </div>
+            <button onclick="testCustom()">Detect DateTime</button>
+            <button onclick="testCustomAll()" style="margin-left: 10px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Find All Matches</button>
+            <div id="customResults" class="results" style="display: none;"></div>
+        </div>
+
+        <!-- Pre-built Test Cases -->
+        <div class="test-section">
+            <h2>✨ Quick Test Cases</h2>
+            <p style="margin-bottom: 15px; color: #666;">Click any test case to run it:</p>
+            
+            <div class="grid">
+                <div class="test-case" onclick="runTest('Meeting tomorrow at 3pm EST')">
+                    <div class="test-case-text">"tomorrow at 3pm EST"</div>
+                </div>
+                <div class="test-case" onclick="runTest('Call me tmrw at 2pm PST')">
+                    <div class="test-case-text">"tmrw at 2pm PST"</div>
+                </div>
+                <div class="test-case" onclick="runTest('Start in 2 hours EST')">
+                    <div class="test-case-text">"in 2 hours EST"</div>
+                </div>
+                <div class="test-case" onclick="runTest('next Monday 10am PST')">
+                    <div class="test-case-text">"next Monday 10am PST"</div>
+                </div>
+                <div class="test-case" onclick="runTest('Let us meet at 10:30 +05:30')">
+                    <div class="test-case-text">"10:30 +05:30"</div>
+                </div>
+                <div class="test-case" onclick="runTest('Conference at 2pm New York time')">
+                    <div class="test-case-text">"2pm New York time"</div>
+                </div>
+                <div class="test-case" onclick="runTest('mon at 9am')">
+                    <div class="test-case-text">"mon at 9am"</div>
+                </div>
+                <div class="test-case" onclick="runTest('in 30 mins from now PST')">
+                    <div class="test-case-text">"in 30 mins PST"</div>
+                </div>
+                <div class="test-case" onclick="runTest('tonight at 8pm')">
+                    <div class="test-case-text">"tonight at 8pm"</div>
+                </div>
+                <div class="test-case" onclick="runTest('Oct 9, 2025 at 3pm EST')">
+                    <div class="test-case-text">"Oct 9, 2025 at 3pm EST"</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Batch Testing -->
+        <div class="test-section">
+            <h2>🎯 Batch Testing</h2>
+            <p style="margin-bottom: 15px; color: #666;">Test multiple patterns at once:</p>
+            <button onclick="runBatchTest()">Run All Test Cases</button>
+            <div id="batchResults" class="results" style="display: none;"></div>
+        </div>
+
+        <!-- Performance Stats -->
+        <div class="test-section">
+            <h2>📊 Performance Stats</h2>
+            <button onclick="showStats()">Show Cache Statistics</button>
+            <button onclick="clearCacheStats()" style="margin-left: 10px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Clear Cache</button>
+            <div id="statsResults" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="detector.js"></script>
+    <script>
+        // Initialize detector
+        const detector = new DateTimeDetector();
+        let testCount = 0;
+        let successCount = 0;
+
+        // Test custom input (single match)
+        function testCustom() {
+            const input = document.getElementById('customInput').value;
+            if (!input.trim()) {
+                alert('Please enter some text to test');
+                return;
+            }
+
+            const startTime = performance.now();
+            const result = detector.detect(input);
+            const endTime = performance.now();
+
+            displayResults([result], 'customResults', endTime - startTime);
+        }
+
+        // Test custom input (all matches)
+        function testCustomAll() {
+            const input = document.getElementById('customInput').value;
+            if (!input.trim()) {
+                alert('Please enter some text to test');
+                return;
+            }
+
+            const startTime = performance.now();
+            const results = detector.detect(input, true);
+            const endTime = performance.now();
+
+            displayResults(results ? results : [], 'customResults', endTime - startTime);
+        }
+
+        // Run single test case
+        function runTest(text) {
+            document.getElementById('customInput').value = text;
+            testCustom();
+        }
+
+        // Run batch test
+        function runBatchTest() {
+            const testCases = [
+                "Meeting tomorrow at 3pm EST",
+                "Call me tmrw at 2pm PST",
+                "Start in 2 hours EST",
+                "next Monday 10am PST",
+                "Conference at 10:30 +05:30",
+                "Let's meet at 2pm New York time",
+                "mon at 9am",
+                "in 30 mins from now PST",
+                "tonight at 8pm",
+                "Oct 9, 2025 at 3pm EST",
+                "fri at 5pm",
+                "after 1 hour GMT",
+                "3pm London time",
+                "next wed at 11am",
+                "tmrw at noon EST"
+            ];
+
+            const resultsContainer = document.getElementById('batchResults');
+            resultsContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Running tests...</div>';
+            resultsContainer.style.display = 'block';
+
+            setTimeout(() => {
+                let html = '<div style="margin-bottom: 20px;"><strong>Batch Test Results:</strong></div>';
+                let totalTime = 0;
+                let detectedCount = 0;
+
+                testCases.forEach((testCase, index) => {
+                    const startTime = performance.now();
+                    const result = detector.detect(testCase);
+                    const endTime = performance.now();
+                    const time = (endTime - startTime).toFixed(2);
+                    totalTime += parseFloat(time);
+
+                    if (result) {
+                        detectedCount++;
+                        html += `
+                            <div class="result-item">
+                                <strong>Test ${index + 1}:</strong> <code>${testCase}</code><br>
+                                <span class="matched-text">${result.matched}</span>
+                                <span class="confidence ${getConfidenceClass(result.confidence)}">${result.confidence}% confidence</span>
+                                <div class="detail-row">
+                                    <span class="detail-label">Processing Time:</span>
+                                    <span class="detail-value">${time}ms</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Type:</span>
+                                    <span class="detail-value">${result.type}</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="result-item" style="border-left-color: #ef4444;">
+                                <strong>Test ${index + 1}:</strong> <code>${testCase}</code><br>
+                                <span style="color: #ef4444;">❌ No match found</span>
+                            </div>
+                        `;
+                    }
+                });
+
+                html += `
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${testCases.length}</div>
+                            <div class="stat-label">Total Tests</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${detectedCount}</div>
+                            <div class="stat-label">Detected</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${totalTime.toFixed(2)}ms</div>
+                            <div class="stat-label">Total Time</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${(totalTime / testCases.length).toFixed(2)}ms</div>
+                            <div class="stat-label">Avg Time</div>
+                        </div>
+                    </div>
+                `;
+
+                resultsContainer.innerHTML = html;
+            }, 100);
+        }
+
+        // Display results
+        function displayResults(results, containerId, processingTime) {
+            const container = document.getElementById(containerId);
+            
+            if (!results || (Array.isArray(results) && results.length === 0)) {
+                container.innerHTML = '<div class="no-results">No datetime patterns detected</div>';
+                container.style.display = 'block';
+                return;
+            }
+
+            const resultsArray = Array.isArray(results) ? results : [results];
+            let html = '';
+
+            resultsArray.forEach((result, index) => {
+                if (!result) return;
+
+                const parsed = result.parsed || {};
+                html += `
+                    <div class="result-item">
+                        <div style="margin-bottom: 10px;">
+                            <strong>Match ${index + 1}:</strong>
+                            <span class="matched-text">${result.matched}</span>
+                            <span class="confidence ${getConfidenceClass(result.confidence)}">${result.confidence}% confidence</span>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <span class="detail-label">Type:</span>
+                            <span class="detail-value">${result.type}</span>
+                        </div>
+                        
+                        ${parsed.time ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Time:</span>
+                                <span class="detail-value">${formatTime(parsed.time)}</span>
+                            </div>
+                        ` : ''}
+                        
+                        ${parsed.date ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Date:</span>
+                                <span class="detail-value">${formatDate(parsed.date)}</span>
+                            </div>
+                        ` : ''}
+                        
+                        ${parsed.timezone ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Timezone:</span>
+                                <span class="detail-value">${parsed.timezone.display} (${parsed.timezone.iana})</span>
+                            </div>
+                        ` : ''}
+                        
+                        ${parsed.relative ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Relative:</span>
+                                <span class="detail-value">${parsed.relativeAmount} ${parsed.relativeUnit}</span>
+                            </div>
+                        ` : ''}
+                        
+                        ${parsed.naturalLanguage ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Reference:</span>
+                                <span class="detail-value">${parsed.originalReference}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            if (processingTime !== undefined) {
+                html += `
+                    <div style="margin-top: 15px; padding: 10px; background: #f1f5f9; border-radius: 5px; text-align: center;">
+                        ⚡ Processing time: <strong>${processingTime.toFixed(2)}ms</strong>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+
+        // Show cache stats
+        function showStats() {
+            const stats = detector.getCacheStats();
+            const statsContainer = document.getElementById('statsResults');
+            
+            const html = `
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.size}</div>
+                        <div class="stat-label">Cache Size</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.maxSize}</div>
+                        <div class="stat-label">Max Size</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${(stats.hitRate * 100).toFixed(1)}%</div>
+                        <div class="stat-label">Hit Rate</div>
+                    </div>
+                </div>
+            `;
+            
+            statsContainer.innerHTML = html;
+            statsContainer.style.display = 'block';
+        }
+
+        // Clear cache
+        function clearCacheStats() {
+            detector.clearCache();
+            alert('Cache cleared successfully!');
+            showStats();
+        }
+
+        // Helper functions
+        function getConfidenceClass(confidence) {
+            if (confidence >= 80) return 'high';
+            if (confidence >= 60) return 'medium';
+            return 'low';
+        }
+
+        function formatTime(time) {
+            if (!time) return 'N/A';
+            const h = time.hours || 0;
+            const m = (time.minutes || 0).toString().padStart(2, '0');
+            const s = (time.seconds || 0).toString().padStart(2, '0');
+            return time.period ? `${h}:${m}:${s} ${time.period}` : `${h}:${m}:${s}`;
+        }
+
+        function formatDate(date) {
+            if (!date) return 'N/A';
+            const suffix = date.inferred ? ' (inferred)' : date.relative ? ' (relative)' : '';
+            return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}${suffix}`;
+        }
+    </script>
+</body>
+</html>

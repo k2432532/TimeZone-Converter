@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Detection Bug Fix Test</title>
+  <script src="content/detector.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    .test-case { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .success { border-left: 4px solid #4CAF50; }
+    .error { border-left: 4px solid #f44336; }
+    h2 { color: #333; }
+    pre { background: #f9f9f9; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    .expected { color: #4CAF50; }
+    .actual { color: #2196F3; }
+  </style>
+</head>
+<body>
+  <h1>🔧 Testing Date Detection Bug Fix</h1>
+  <div id="results"></div>
+  
+  <script>
+    const detector = new DateTimeDetector();
+    
+    const testCases = [
+      {
+        text: "Meeting on 11 Oct 7 PM EST",
+        expectedDay: 11,
+        expectedMonth: 10,
+        expectedHour: 19, // 7 PM in 24h
+        expectedTimezone: "EST/EDT"
+      },
+      {
+        text: "Call scheduled for 15 December 3:30 PM PST",
+        expectedDay: 15,
+        expectedMonth: 12,
+        expectedHour: 15,
+        expectedTimezone: "PST/PDT"
+      },
+      {
+        text: "Event: 25 Nov 2025 10 AM GMT",
+        expectedDay: 25,
+        expectedMonth: 11,
+        expectedYear: 2025,
+        expectedHour: 10,
+        expectedTimezone: "UTC"
+      },
+      {
+        text: "Deadline is 1st Jan 9:00 PM IST",
+        expectedDay: 1,
+        expectedMonth: 1,
+        expectedHour: 21,
+        expectedTimezone: "IST"
+      }
+    ];
+    
+    let resultsHTML = '';
+    let passedCount = 0;
+    
+    testCases.forEach((testCase, index) => {
+      const result = detector.detect(testCase.text);
+      
+      let passed = true;
+      let issues = [];
+      
+      if (result) {
+        const parsed = result.parsed;
+        
+        // Check day
+        if (parsed.date.day !== testCase.expectedDay) {
+          passed = false;
+          issues.push(`Day: expected ${testCase.expectedDay}, got ${parsed.date.day}`);
+        }
+        
+        // Check month
+        if (parsed.date.month !== testCase.expectedMonth) {
+          passed = false;
+          issues.push(`Month: expected ${testCase.expectedMonth}, got ${parsed.date.month}`);
+        }
+        
+        // Check year if specified
+        if (testCase.expectedYear && parsed.date.year !== testCase.expectedYear) {
+          passed = false;
+          issues.push(`Year: expected ${testCase.expectedYear}, got ${parsed.date.year}`);
+        }
+        
+        // Check hour
+        if (parsed.time.hours !== testCase.expectedHour) {
+          passed = false;
+          issues.push(`Hour: expected ${testCase.expectedHour}, got ${parsed.time.hours}`);
+        }
+        
+        // Check timezone
+        if (parsed.timezone?.display !== testCase.expectedTimezone) {
+          passed = false;
+          issues.push(`Timezone: expected ${testCase.expectedTimezone}, got ${parsed.timezone?.display}`);
+        }
+        
+        if (passed) passedCount++;
+        
+        resultsHTML += `
+          <div class="test-case ${passed ? 'success' : 'error'}">
+            <h2>Test ${index + 1}: ${passed ? '✅ PASSED' : '❌ FAILED'}</h2>
+            <p><strong>Input:</strong> "${testCase.text}"</p>
+            <p><strong>Matched:</strong> "${result.matched}"</p>
+            <p><strong>Pattern Type:</strong> ${result.type}</p>
+            <p><strong>Confidence:</strong> ${result.confidence}%</p>
+            
+            <div class="expected">
+              <strong>Expected:</strong>
+              <ul>
+                <li>Date: ${testCase.expectedDay}/${testCase.expectedMonth}${testCase.expectedYear ? '/' + testCase.expectedYear : ''}</li>
+                <li>Time: ${testCase.expectedHour}:00</li>
+                <li>Timezone: ${testCase.expectedTimezone}</li>
+              </ul>
+            </div>
+            
+            <div class="actual">
+              <strong>Actual:</strong>
+              <ul>
+                <li>Date: ${parsed.date.day}/${parsed.date.month}/${parsed.date.year}</li>
+                <li>Time: ${parsed.time.hours}:${String(parsed.time.minutes).padStart(2, '0')}</li>
+                <li>Timezone: ${parsed.timezone?.display || 'none'}</li>
+              </ul>
+            </div>
+            
+            ${issues.length > 0 ? `<p style="color: #f44336;"><strong>Issues:</strong><br>${issues.join('<br>')}</p>` : ''}
+            
+            <details>
+              <summary>Full Parsed Object</summary>
+              <pre>${JSON.stringify(parsed, null, 2)}</pre>
+            </details>
+          </div>
+        `;
+      } else {
+        resultsHTML += `
+          <div class="test-case error">
+            <h2>Test ${index + 1}: ❌ FAILED</h2>
+            <p><strong>Input:</strong> "${testCase.text}"</p>
+            <p style="color: #f44336;">No match found!</p>
+          </div>
+        `;
+      }
+    });
+    
+    resultsHTML = `
+      <div class="test-case" style="background: #e3f2fd; border-left: 4px solid #2196F3;">
+        <h2>Test Summary</h2>
+        <p><strong>Passed:</strong> ${passedCount} / ${testCases.length}</p>
+        <p><strong>Success Rate:</strong> ${Math.round((passedCount / testCases.length) * 100)}%</p>
+      </div>
+    ` + resultsHTML;
+    
+    document.getElementById('results').innerHTML = resultsHTML;
+  </script>
+</body>
+</html>

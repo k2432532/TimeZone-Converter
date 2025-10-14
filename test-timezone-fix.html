@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timezone Fix Test - Tomorrow Logic</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #2196f3;
+    }
+    .current-times {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .time-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #dee2e6;
+    }
+    .time-card h3 {
+      margin: 0 0 10px 0;
+      color: #495057;
+    }
+    .time-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #212529;
+    }
+    .test-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .test-input {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      border: 2px solid #007bff;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .result {
+      margin: 15px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 6px;
+      border-left: 4px solid #28a745;
+    }
+    .result.error {
+      border-left-color: #dc3545;
+      background: #fff5f5;
+    }
+    .result h4 {
+      margin: 0 0 10px 0;
+      color: #28a745;
+    }
+    .result.error h4 {
+      color: #dc3545;
+    }
+    .conversion-details {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .detail-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #6c757d;
+    }
+    .detail-value {
+      color: #212529;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 5px 10px 0;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 Timezone Conversion Fix Test</h1>
+    <p style="color: #6c757d;">Testing: "tmrw at 2pm PST" should use PST's date, not browser timezone</p>
+
+    <div class="info">
+      <strong>🔧 Fix Implemented:</strong> When parsing "tomorrow", the system now calculates "tomorrow" 
+      relative to the <strong>specified timezone</strong> (PST), not the browser's timezone (IST).
+    </div>
+
+    <h2>📅 Current Times</h2>
+    <div class="current-times">
+      <div class="time-card">
+        <h3>🌐 Your Browser (IST)</h3>
+        <div class="time-value" id="browser-time"></div>
+      </div>
+      <div class="time-card">
+        <h3>🇺🇸 Pacific Time (PST/PDT)</h3>
+        <div class="time-value" id="pst-time"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 Test Cases</h2>
+      
+      <button onclick="testScenario('tmrw at 2pm PST')">Test: "tmrw at 2pm PST"</button>
+      <button onclick="testScenario('tomorrow at 3pm EST')">Test: "tomorrow at 3pm EST"</button>
+      <button onclick="testScenario('next Monday 10am PST')">Test: "next Monday 10am PST"</button>
+      <button onclick="testScenario('in 2 hours PST')">Test: "in 2 hours PST"</button>
+      <button onclick="testAllScenarios()">Test All Scenarios</button>
+
+      <div id="results"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>✏️ Custom Test</h2>
+      <input type="text" id="custom-input" placeholder="Enter text like: tmrw at 2pm PST" 
+             style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #dee2e6; border-radius: 6px;">
+      <button onclick="testCustom()" style="margin-top: 10px;">Test Custom Input</button>
+      <div id="custom-results"></div>
+    </div>
+  </div>
+
+  <script src="content/detector.js"></script>
+  <script src="content/converter.js"></script>
+  <script>
+    const detector = new DateTimeDetector();
+    const converter = new TimeZoneConverter();
+
+    function updateCurrentTimes() {
+      const now = new Date();
+      
+      // Browser time
+      document.getElementById('browser-time').textContent = now.toLocaleString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      // PST time
+      document.getElementById('pst-time').textContent = now.toLocaleString('en-US', {
+        timeZone: 'America/Los_Angeles',
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function testScenario(text) {
+      const resultsDiv = document.getElementById('results');
+      
+      // Clear previous results
+      resultsDiv.innerHTML = '';
+
+      // Show input
+      const inputDiv = document.createElement('div');
+      inputDiv.className = 'test-input';
+      inputDiv.innerHTML = `<strong>Input:</strong> "${text}"`;
+      resultsDiv.appendChild(inputDiv);
+
+      // Detect
+      const detected = detector.detect(text);
+      
+      if (!detected) {
+        resultsDiv.innerHTML += '<div class="result error"><h4>❌ No Detection</h4><p>Failed to detect date/time pattern</p></div>';
+        return;
+      }
+
+      // Show detection result
+      const detectionDiv = document.createElement('div');
+      detectionDiv.className = 'result';
+      detectionDiv.innerHTML = `
+        <h4>✓ Detection Result</h4>
+        <div class="conversion-details">
+          <div class="detail-row">
+            <div class="detail-label">Type:</div>
+            <div class="detail-value">${detected.type}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Confidence:</div>
+            <div class="detail-value">${detected.confidence}%</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Parsed Date:</div>
+            <div class="detail-value">${JSON.stringify(detected.parsed.date)}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Parsed Time:</div>
+            <div class="detail-value">${JSON.stringify(detected.parsed.time)}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Source Timezone:</div>
+            <div class="detail-value">${detected.parsed.timezone?.iana || 'Not specified'}</div>
+          </div>
+        </div>
+      `;
+      resultsDiv.appendChild(detectionDiv);
+
+      // Convert to IST
+      const converted = converter.convert(detected.parsed, 'Asia/Kolkata');
+      
+      if (!converted) {
+        resultsDiv.innerHTML += '<div class="result error"><h4>❌ Conversion Failed</h4></div>';
+        return;
+      }
+
+      // Show conversion result
+      const conversionDiv = document.createElement('div');
+      conversionDiv.className = 'result';
+      conversionDiv.innerHTML = `
+        <h4>✓ Conversion to IST</h4>
+        <div class="conversion-details">
+          <div class="detail-row">
+            <div class="detail-label">Source Time:</div>
+            <div class="detail-value"><span class="highlight">${converted.source.datetime}</span> ${converted.source.timezone}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Your Time (IST):</div>
+            <div class="detail-value"><span class="highlight">${converted.target.datetime}</span> ${converted.target.timezone}</div>
+          </div>
+          ${converted.inferred ? `
+          <div class="detail-row">
+            <div class="detail-label">Inferred:</div>
+            <div class="detail-value">${converted.inferred.join(', ')}</div>
+          </div>
+          ` : ''}
+        </div>
+      `;
+      resultsDiv.appendChild(conversionDiv);
+
+      // Show key fix verification
+      if (text.includes('tmrw') || text.includes('tomorrow')) {
+        const verificationDiv = document.createElement('div');
+        verificationDiv.className = 'result';
+        verificationDiv.style.borderLeftColor = '#17a2b8';
+        
+        const sourceDate = new Date(
+          converted.source.raw.year,
+          converted.source.raw.month - 1,
+          converted.source.raw.day
+        );
+        
+        verificationDiv.innerHTML = `
+          <h4>🔍 Verification</h4>
+          <div class="conversion-details">
+            <div class="detail-row">
+              <div class="detail-label">"Tomorrow" calculated in:</div>
+              <div class="detail-value">${detected.parsed.date.calculatedInTimezone || 'browser'}</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Resulting date:</div>
+              <div class="detail-value">${sourceDate.toDateString()}</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">✓ Expected behavior:</div>
+              <div class="detail-value">Date calculated using <strong>${detected.parsed.timezone?.iana || 'browser timezone'}</strong>'s "tomorrow", not IST's tomorrow</div>
+            </div>
+          </div>
+        `;
+        resultsDiv.appendChild(verificationDiv);
+      }
+    }
+
+    function testAllScenarios() {
+      const scenarios = [
+        'tmrw at 2pm PST',
+        'tomorrow at 3pm EST',
+        'next Monday 10am PST',
+        'in 2 hours PST'
+      ];
+      
+      scenarios.forEach((scenario, index) => {
+        setTimeout(() => testScenario(scenario), index * 100);
+      });
+    }
+
+    function testCustom() {
+      const input = document.getElementById('custom-input').value;
+      if (!input.trim()) {
+        alert('Please enter a test string');
+        return;
+      }
+      testScenario(input);
+    }
+
+    // Update times every second
+    updateCurrentTimes();
+    setInterval(updateCurrentTimes, 1000);
+
+    // Auto-run first test on load
+    setTimeout(() => testScenario('tmrw at 2pm PST'), 500);
+  </script>
+</body>
+</html>
