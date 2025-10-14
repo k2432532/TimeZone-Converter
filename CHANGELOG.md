@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [5.2.0] - 2025-10-14
+
+### ⚡ Major Change - Selection-Only Mode
+
+#### Changed
+- 🎯 **Breaking:** Extension now works ONLY with text selection
+  - Removed automatic hover detection completely
+  - Users must select text to see time conversions
+  - Provides cleaner, more intentional user experience
+  - Reduces accidental tooltip triggers
+
+#### Removed
+- ❌ Hover detection functionality (`handleMouseMove` function)
+- ❌ Hover-related configuration (`hoverDelay`)
+- ❌ Hover timer state management
+
+#### Benefits
+- ✨ More control over when conversions appear
+- ✨ Cleaner browsing experience
+- ✨ No unwanted tooltips while reading
+- ✨ Better performance (fewer event listeners)
+
+---
+
 ## [5.1.1] - 2025-10-10
 
 ### 🐛 Bug Fix - Reverse Date Format

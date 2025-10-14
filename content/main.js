@@ -1,10 +1,11 @@
 /**
- * Main Content Script V2
+ * Main Content Script V2 - Selection-Only Mode
  * Enhanced to work with DateTimeDetector V2.0
  * - Confidence-based filtering
  * - Natural language support
  * - Relative time detection
  * - Performance optimizations
+ * - Text selection detection ONLY (hover disabled)
  */
 
 (function() {
@@ -12,7 +13,7 @@
 
   // Configuration
   const CONFIG = {
-    hoverDelay: 300,           // ms to wait before detecting on hover
+    // hoverDelay: 300,        // DISABLED - no longer detecting on hover
     maxTextLength: 500,        // max text length to process
     debounceDelay: 150,        // debounce delay for events
     tooltipOffset: 12,         // pixels from cursor/selection
@@ -26,14 +27,14 @@
   let tooltip = null;
   let userTimezone = null;
   let isEnabled = true;
-  let hoverTimer = null;
+  // let hoverTimer = null;  // REMOVED - no longer needed for hover detection
   let lastProcessedText = '';
 
   /**
    * Initialize extension
    */
   function init() {
-    console.log('[TimeZone Converter V5.1] Initializing with enhanced detector...');
+    console.log('[TimeZone Converter V5.1] Initializing (Selection-Only Mode)...');
     
     // Create instances
     detector = new DateTimeDetector();
@@ -49,7 +50,7 @@
     // Setup event listeners
     setupEventListeners();
     
-    console.log('[TimeZone Converter V5.1] Ready! Features: Natural Language, Relative Time, 100+ Timezones');
+    console.log('[TimeZone Converter V5.1] Ready! Select text to convert times. Features: Natural Language, Relative Time, 100+ Timezones');
   }
 
   /**
@@ -70,12 +71,12 @@
    * Setup event listeners
    */
   function setupEventListeners() {
-    // Selection events (highest priority for user intent)
+    // Selection events ONLY - removed hover detection
     document.addEventListener('mouseup', handleMouseUp, true);
     document.addEventListener('selectionchange', debounce(handleSelectionChange, CONFIG.debounceDelay));
     
-    // Hover events (secondary, passive detection)
-    document.addEventListener('mousemove', debounce(handleMouseMove, CONFIG.hoverDelay), true);
+    // Hover events DISABLED - no longer detecting on hover
+    // document.addEventListener('mousemove', debounce(handleMouseMove, CONFIG.hoverDelay), true);
     
     // Hide tooltip on scroll/click
     document.addEventListener('scroll', hideTooltip, true);
@@ -206,8 +207,10 @@
   }
 
   /**
-   * Handle mouse move (hover detection)
+   * Handle mouse move (hover detection) - DISABLED
+   * This function is kept for reference but not used
    */
+  /*
   function handleMouseMove(e) {
     if (!isEnabled) return;
     
@@ -224,6 +227,7 @@
       }
     }, CONFIG.hoverDelay);
   }
+  */
 
   /**
    * Process text for date/time detection

@@ -1,14 +1,19 @@
-# 🌍 Smart TimeZone Converter V5.1
+# 🌍 Smart TimeZone Converter V5.1 (Selection-Only Mode)
 
-**A next-generation Chrome extension that intelligently detects, converts, and displays date/time information with natural language processing, 100+ timezones, and elegant tooltips.**
+**A next-generation Chrome extension that intelligently detects, converts, and displays date/time information when you select text. Features natural language processing, 100+ timezones, and elegant tooltips.**
 
-[![Version](https://img.shields.io/badge/version-5.1.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-5.1.1-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 [![Chrome](https://img.shields.io/badge/chrome-88%2B-yellow.svg)]()
 
 ---
 
-## ✨ What's New in V5.1
+## ✨ What's New in V5.1.1
+
+### 🎯 Selection-Only Detection
+- **Text Selection Required**: The extension now only activates when you select text containing time information
+- **No Hover Detection**: Removed automatic hover detection for a cleaner, more intentional user experience
+- **Better Control**: You decide exactly when to convert times by selecting the relevant text
 
 ### 🧠 Smart AI Detection
 - ✅ **Natural Language**: "tomorrow at 3pm EST", "next Monday 10am PST"
@@ -118,26 +123,20 @@
 
 ## 💡 Usage
 
-### Automatic Detection
+### How It Works
 
-The extension works in two ways:
-
-#### 1. Text Selection (Recommended)
-- **Select** any text containing a date/time
-- **Tooltip appears** instantly with conversion
-- Works in Gmail, Slack, Google Docs, any website
-
-#### 2. Hover Detection (Passive)
-- **Hover** over text containing date/time
-- **Tooltip appears** after brief delay
-- Great for quick checks
+#### Text Selection Detection
+- **Select** any text containing a date/time with your mouse
+- **Tooltip appears** instantly with the converted time
+- Works in Gmail, Slack, Google Docs, and any website
+- Simply click elsewhere or press ESC to dismiss the tooltip
 
 ### Configuration
 
 Click the extension icon to customize:
 
 - **Toggle Extension**: Enable/disable detection
-- **Target Timezone**: Choose your timezone
+- **Target Timezone**: Choose your preferred timezone for conversions
 - Settings sync across all Chrome devices
 
 ---

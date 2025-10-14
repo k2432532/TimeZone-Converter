@@ -1,6 +1,6 @@
-# 🚀 Getting Started with Smart TimeZone Converter V5.1
+# 🚀 Getting Started with Smart TimeZone Converter V5.1.1 (Selection-Only Mode)
 
-**Welcome! This guide will help you get up and running in 5 minutes.**
+**Welcome! This guide will help you get up and running in 5 minutes. The extension now works exclusively with text selection for a cleaner, more controlled experience.**
 
 ---
 
@@ -109,16 +109,11 @@ All conversions will now show times in your timezone.
 - ✅ Google Docs
 - ✅ Any website
 
-### Hover Detection (Secondary)
-
-1. **Hover** mouse over text with date/time
-2. **Wait** brief moment (~300ms)
-3. **Tooltip appears** with conversion
-
-**Great for:**
-- Quick checks
-- Reading emails
-- Browsing websites
+**How to use:**
+- Simply drag your mouse to select text
+- Works with single click and drag
+- Triple-click to select entire paragraph
+- Ctrl/Cmd+A to select all and check entire page
 
 ---
 
@@ -144,7 +139,7 @@ Edit `content/main.js` > `CONFIG`:
 
 ```javascript
 {
-  hoverDelay: 300,        // ms before hover triggers
+  // hoverDelay: 300,     // REMOVED - hover detection disabled
   maxTextLength: 500,     // max text to process
   minConfidence: 70,      // confidence threshold (0-100)
   showConfidence: true    // show % in tooltip
@@ -195,7 +190,7 @@ Always include timezone for accurate conversion:
 - `10am PST` instead of just `10am`
 
 ### Tip 4: Check Confidence
-Low confidence? Hover to see "Assumptions" in tooltip
+Low confidence? Select text to see "Assumptions" in tooltip
 - Date inferred? Maybe add explicit date
 - Timezone missing? Add timezone abbreviation
 
