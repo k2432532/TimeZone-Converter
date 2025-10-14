@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TimeZone Converter - Comprehensive Test Suite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    h2 {
+      color: #667eea;
+      margin: 30px 0 15px;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+    }
+
+    h3 {
+      color: #555;
+      margin: 20px 0 10px;
+      font-size: 18px;
+    }
+
+    .test-section {
+      background: white;
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .test-item {
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      border-radius: 6px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .test-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .test-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .test-content {
+      font-size: 16px;
+      color: #333;
+      font-weight: 500;
+      cursor: text;
+      user-select: text;
+    }
+
+    .instructions {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .instructions h3 {
+      color: white;
+      margin-top: 0;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    .instructions li {
+      margin: 8px 0;
+    }
+
+    .feature-test {
+      background: #fff3cd;
+      border: 2px dashed #ffc107;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .security-test {
+      background: #d4edda;
+      border: 2px solid #28a745;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .error-test {
+      background: #f8d7da;
+      border: 2px solid #dc3545;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .edge-case {
+      font-style: italic;
+      color: #666;
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #d63384;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    .status-active {
+      background: #28a745;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    🧪 TimeZone Converter Test Suite
+    <span class="version-badge">v5.2.1</span>
+  </h1>
+
+  <div class="instructions">
+    <h3>📋 Testing Instructions</h3>
+    <ol>
+      <li><strong>Select any text</strong> containing time information by clicking and dragging</li>
+      <li><strong>Release the mouse button</strong> - the tooltip should appear immediately</li>
+      <li><strong>Click elsewhere or press ESC</strong> to dismiss the tooltip</li>
+      <li>Verify no overlapping tooltips appear</li>
+      <li>Test different selection methods (double-click, triple-click, keyboard selection)</li>
+    </ol>
+  </div>
+
+  <!-- Test Section 1: Basic Time Formats -->
+  <div class="test-section">
+    <h2>1️⃣ Basic Time Formats</h2>
+    <div class="test-grid">
+      <div class="test-item">
+        <div class="test-label">Standard 12-hour</div>
+        <div class="test-content">10:30 AM EST</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Standard 24-hour</div>
+        <div class="test-content">14:45 GMT</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">With seconds</div>
+        <div class="test-content">3:25:45 PM PST</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Noon/Midnight</div>
+        <div class="test-content">Noon EST</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Section 2: Natural Language -->
+  <div class="test-section">
+    <h2>2️⃣ Natural Language Detection</h2>
+    <div class="test-grid">
+      <div class="test-item">
+        <div class="test-label">Tomorrow + Time</div>
+        <div class="test-content">tomorrow at 3pm EST</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Day of Week</div>
+        <div class="test-content">next Monday 10am PST</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Relative Time</div>
+        <div class="test-content">in 2 hours EST</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Casual Format</div>
+        <div class="test-content">tmrw at 2pm</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Section 3: City-Based Times -->
+  <div class="test-section">
+    <h2>3️⃣ City-Based Time Zones</h2>
+    <div class="test-grid">
+      <div class="test-item">
+        <div class="test-label">New York</div>
+        <div class="test-content">3pm New York time</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">London</div>
+        <div class="test-content">10am London time</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Tokyo</div>
+        <div class="test-content">9:00 AM Tokyo time</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Sydney</div>
+        <div class="test-content">2pm Sydney time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Section 4: UTC Offsets -->
+  <div class="test-section">
+    <h2>4️⃣ UTC Offset Formats</h2>
+    <div class="test-grid">
+      <div class="test-item">
+        <div class="test-label">Positive Offset</div>
+        <div class="test-content">10:30 +05:30</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Negative Offset</div>
+        <div class="test-content">15:00 GMT-5</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">UTC Format</div>
+        <div class="test-content">2pm UTC+8</div>
+      </div>
+      <div class="test-item">
+        <div class="test-label">Zero Offset</div>
+        <div class="test-content">12:00 UTC</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Testing -->
+  <div class="feature-test">
+    <h2>✨ Feature Testing</h2>
+    <h3>Test Multi-Selection Behavior:</h3>
+    <p>
+      Select this first time: <strong>Meeting at 3pm EST</strong>, 
+      then without clicking elsewhere, select this: <strong>Deadline at 5pm PST</strong>.
+      Only the second tooltip should appear.
+    </p>
+    
+    <h3>Test Rapid Selection:</h3>
+    <p>
+      Quickly select and deselect these times in succession:
+      <strong>10am GMT</strong>, <strong>2pm EST</strong>, <strong>4pm PST</strong>.
+      Tooltips should not overlap or persist.
+    </p>
+  </div>
+
+  <!-- Security Testing -->
+  <div class="security-test">
+    <h2>🔒 Security Testing</h2>
+    <h3>XSS Prevention Test:</h3>
+    <p>Select this text (should be safely escaped): <code>&lt;script&gt;alert('XSS')&lt;/script&gt; at 3pm EST</code></p>
+    
+    <h3>HTML Injection Test:</h3>
+    <p>Select this: <code>&lt;img src=x onerror=alert(1)&gt; meeting at 2pm PST</code></p>
+  </div>
+
+  <!-- Edge Cases -->
+  <div class="error-test">
+    <h2>🚨 Edge Cases & Error Handling</h2>
+    <div class="edge-case">
+      <strong>Ambiguous Times:</strong> Select "3:00" (no AM/PM or timezone - should use defaults)
+    </div>
+    <div class="edge-case">
+      <strong>Invalid Format:</strong> Select "25:99 PM EST" (should not show tooltip)
+    </div>
+    <div class="edge-case">
+      <strong>Very Long Text:</strong> Select this entire paragraph including the time 3pm EST buried in lots of other text that makes the selection very long and potentially problematic for processing but the extension should handle it gracefully without freezing or crashing the browser even with this much text selected at once.
+    </div>
+    <div class="edge-case">
+      <strong>Multiple Times:</strong> Meeting from 10am EST to 2pm PST with lunch at 12pm CST
+    </div>
+  </div>
+
+  <!-- Performance Testing -->
+  <div class="test-section">
+    <h2>⚡ Performance Testing</h2>
+    <h3>Large Block Selection Test:</h3>
+    <p>
+      Select this entire block: Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+      The conference call is scheduled for 3:30 PM EST tomorrow. 
+      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+      Please join the meeting at 10:00 AM PST on Monday. 
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+      The deadline is set for 5:00 PM GMT next Friday.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
+    </p>
+
+    <h3>Nested Elements Test:</h3>
+    <div>
+      <span>Outer: <strong>Inner: <em>Deep: 4pm EST</em></strong></span>
+    </div>
+  </div>
+
+  <!-- Interactive Testing -->
+  <div class="test-section">
+    <h2>🎮 Interactive Testing</h2>
+    <h3>ContentEditable Area:</h3>
+    <div contenteditable="true" style="border: 1px solid #ddd; padding: 10px; min-height: 60px;">
+      Type or paste times here: Try 3pm EST or tomorrow at noon PST
+    </div>
+
+    <h3>Input Field Test:</h3>
+    <input type="text" value="Meeting at 2:30 PM EST" style="width: 100%; padding: 8px; font-size: 16px;">
+
+    <h3>Textarea Test:</h3>
+    <textarea rows="3" style="width: 100%; padding: 8px; font-size: 16px;">Conference call at 10am GMT
+Lunch meeting at 12pm EST
+Follow-up at 3pm PST</textarea>
+  </div>
+
+  <footer>
+    <span class="status-indicator status-active"></span>
+    <strong>Extension Status:</strong> If tooltips appear when selecting times above, the extension is working correctly.
+    <br>
+    <small>TimeZone Converter v5.2.1 - Comprehensive Test Suite</small>
+  </footer>
+</body>
+</html>

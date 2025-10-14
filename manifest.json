@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Smart TimeZone Converter",
-  "version": "5.2.0",
-  "description": "Convert times when you select text - with natural language support, 100+ timezones, and elegant tooltips",
+  "version": "5.2.1",
+  "description": "Smart timezone converter - Select any text with time info to instantly convert between 100+ timezones. Features natural language detection.",
   "permissions": [
     "storage",
     "activeTab"

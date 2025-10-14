@@ -1,44 +1,44 @@
-# 🌍 Smart TimeZone Converter V5.1 (Selection-Only Mode)
+# 🌍 Smart TimeZone Converter V5.2.1
 
 **A next-generation Chrome extension that intelligently detects, converts, and displays date/time information when you select text. Features natural language processing, 100+ timezones, and elegant tooltips.**
 
-[![Version](https://img.shields.io/badge/version-5.1.1-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-5.2.1-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 [![Chrome](https://img.shields.io/badge/chrome-88%2B-yellow.svg)]()
 
 ---
 
-## ✨ What's New in V5.1.1
+## ✨ What's New in V5.2.1
 
-### 🎯 Selection-Only Detection
-- **Text Selection Required**: The extension now only activates when you select text containing time information
-- **No Hover Detection**: Removed automatic hover detection for a cleaner, more intentional user experience
-- **Better Control**: You decide exactly when to convert times by selecting the relevant text
+### 🎯 Enhanced Selection Detection
+- **Improved Mouse Release Detection**: Tooltip now appears only after you release the mouse button
+- **Better Cleanup**: Tooltips properly disappear when text is deselected or when clicking elsewhere
+- **No More Overlapping**: Fixed issue where multiple tooltips could stack on top of each other
+- **Keyboard Support**: Press ESC to quickly dismiss tooltips
 
-### 🧠 Smart AI Detection
-- ✅ **Natural Language**: "tomorrow at 3pm EST", "next Monday 10am PST"
-- ✅ **Shortforms**: "tmrw at 2pm", "mon 9am", "in 2 hrs"
-- ✅ **Relative Time**: "in 2 hours EST", "30 mins from now"
-- ✅ **UTC Offsets**: "10:30 +05:30", "2pm UTC+8"
-- ✅ **City Names**: "3pm New York time", "10am LA time"
-- ✅ **Confidence Scores**: Smart filtering based on detection accuracy
+### 🚀 User Experience Improvements
+- **Welcome Page**: New users see a comprehensive guide on first installation
+- **Better Onboarding**: Clear instructions on how to use the extension
+- **Interactive Demo**: Try the extension directly on the welcome page
+- **Performance Optimizations**: Reduced debounce delays for more responsive tooltips
 
-### 🌐 Extended Timezone Support
-- **100+ Timezones** including:
-  - All US time zones (EST, PST, CST, MST, AKST, HST)
-  - Major global cities (London, Tokyo, Singapore, Dubai, etc.)
-  - International zones (IST, JST, AEST, NZST, etc.)
-  - UTC offset formats (+05:30, GMT-5, etc.)
-
-### ⚡ Performance & UX
-- **Intelligent Caching**: 100-entry cache for instant repeated queries
-- **Priority-Based Matching**: Optimized pattern detection
-- **Confidence Filtering**: Only shows high-confidence matches (70%+)
-- **Smart Positioning**: Viewport-aware tooltip placement
+### 🛡️ Quality & Security
+- **XSS Protection**: All user input is properly sanitized
+- **Error Handling**: Graceful handling of edge cases and invalid inputs
+- **State Management**: Improved tracking of mouse and selection states
+- **Memory Management**: Better cleanup of event listeners and DOM elements
 
 ---
 
 ## 🚀 Features
+
+### Core Functionality
+- ✅ **Selection-Only Detection**: Select text and release to see conversions
+- ✅ **Smart AI Detection**: Natural language processing with confidence scores
+- ✅ **100+ Timezones**: Support for all major world timezones
+- ✅ **Instant Conversion**: No clicks or keyboard shortcuts needed
+- ✅ **Clean Design**: Beautiful, non-intrusive tooltips
+- ✅ **Privacy First**: All processing done locally, no data sent anywhere
 
 ### Detection Capabilities
 
@@ -48,444 +48,203 @@
 ✅ 2:45 PM PST  
 ✅ 14:00 GMT
 ✅ Noon EST
-✅ Midnight PST
-✅ Oct 9, 2025 at 3pm EST
+✅ 3:25:45 PM CST
 ```
 
-#### Natural Language (NEW!)
+#### Natural Language
 ```
 ✅ tomorrow at 3pm EST
 ✅ next Monday 10am PST
-✅ tonight at 8pm
-✅ next Friday at 2pm
-```
-
-#### Shortforms (NEW!)
-```
-✅ tmrw at 2pm
-✅ mon 9am
-✅ fri at 5pm
-✅ in 2 hrs EST
-✅ 30 mins from now
-```
-
-#### Relative Time (NEW!)
-```
 ✅ in 2 hours EST
-✅ after 30 minutes PST
-✅ in 3 days at 5pm
+✅ tmrw at 2pm
+✅ yesterday at noon GMT
 ```
 
-#### UTC Offsets (NEW!)
+#### City-Based Times
+```
+✅ 3pm New York time
+✅ 10am London time
+✅ 9:00 AM Tokyo time
+✅ 2pm Sydney time
+✅ 4pm Dubai time
+```
+
+#### UTC Offsets
 ```
 ✅ 10:30 +05:30
 ✅ 2pm UTC+8
-✅ 14:00 GMT-5
-```
-
-#### City-Based (NEW!)
-```
-✅ 3pm New York time
-✅ 10am LA time
-✅ 5pm London time
-✅ 2pm Tokyo time
+✅ 15:00 GMT-5
+✅ 12:00 UTC
 ```
 
 ---
 
 ## 📦 Installation
 
-### For Users
+### From Source
+1. Clone this repository or download the ZIP
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode" (top right)
+4. Click "Load unpacked" and select the extension folder
+5. The extension icon will appear in your toolbar
 
-1. **Download** from Chrome Web Store (coming soon)
-2. **Click** "Add to Chrome"
-3. **Done!** Start using immediately
-
-### For Developers
-
-1. **Clone** this repository
-   ```bash
-   git clone <repository-url>
-   cd "Public V5"
-   ```
-
-2. **Open Chrome** and go to `chrome://extensions/`
-
-3. **Enable** "Developer mode" (toggle in top right)
-
-4. **Click** "Load unpacked"
-
-5. **Select** the `Public V5` folder
-
-6. **Success!** The extension is now active
+### First Time Setup
+1. On installation, a welcome page will open automatically
+2. Click the extension icon to configure your preferred timezone
+3. Start selecting text with time information on any webpage!
 
 ---
 
-## 💡 Usage
+## 🎮 How to Use
 
-### How It Works
+### Basic Usage
+1. **Select Text**: Click and drag to highlight any text containing time information
+2. **Release Mouse**: Release the mouse button to trigger detection
+3. **View Conversion**: A tooltip appears showing the converted time
+4. **Dismiss**: Click elsewhere, press ESC, or select new text to hide the tooltip
 
-#### Text Selection Detection
-- **Select** any text containing a date/time with your mouse
-- **Tooltip appears** instantly with the converted time
-- Works in Gmail, Slack, Google Docs, and any website
-- Simply click elsewhere or press ESC to dismiss the tooltip
-
-### Configuration
-
-Click the extension icon to customize:
-
-- **Toggle Extension**: Enable/disable detection
-- **Target Timezone**: Choose your preferred timezone for conversions
-- Settings sync across all Chrome devices
+### Tips & Tricks
+- **Double-click** a time to quickly select it
+- **Triple-click** to select an entire line with time info
+- Use **keyboard selection** (Shift+Arrow keys) for precise control
+- The extension works on **all websites** including Gmail, Slack, Calendar apps
 
 ---
 
-## 🎯 Supported Patterns
+## ⚙️ Configuration
 
-### Time Formats
-| Format | Examples |
-|--------|----------|
-| 12-hour | `3pm`, `10:30 AM`, `3:45:00 PM` |
-| 24-hour | `15:00`, `09:30:00` |
-| Special | `noon`, `midnight` |
-| Shortforms | `3p`, `10a` (with context) |
+### Settings (via Extension Popup)
+- **Target Timezone**: Choose from 30+ major timezones
+- **Enable/Disable**: Toggle the extension on/off
+- **Auto-save**: Settings are automatically synced
 
-### Date Formats
-| Format | Examples |
-|--------|----------|
-| Text | `Oct 9, 2025`, `October 9th, 2025` |
-| ISO | `2025-10-09` |
-| US | `10/09/2025`, `10/9/25` |
-
-### Relative References
-| Type | Examples |
-|------|----------|
-| Days | `today`, `tomorrow`, `tmrw`, `yesterday` |
-| Weekdays | `Monday`, `mon`, `next Friday` |
-| Time Units | `hours`, `hrs`, `minutes`, `mins`, `days` |
-
-### Timezones (100+)
-| Region | Examples |
-|--------|----------|
-| US | EST, EDT, PST, PDT, CST, CDT, MST, MDT, AKST, HST |
-| Europe | GMT, UTC, BST, CET, CEST |
-| Asia | IST, JST, SGT, HKT, KST |
-| Pacific | AEST, AEDT, NZST, NZDT |
-| Offsets | `+05:30`, `UTC+8`, `GMT-5` |
-| Cities | `New York time`, `LA time`, `London time` |
-
----
-
-## 🏗️ Architecture
-
-```
-Public V5/
-├── manifest.json              # Extension manifest (v3)
-├── content/                   # Content scripts
-│   ├── detector.js           # Enhanced pattern detection (740 lines)
-│   ├── converter.js          # Advanced timezone conversion
-│   ├── main.js               # Main orchestration with confidence filtering
-│   ├── detector-documentation.md
-│   ├── UPDATE-SUMMARY.md
-│   └── QUICK-REFERENCE.md
-├── background/
-│   └── service-worker.js     # Background service worker
-├── ui/
-│   ├── tooltip.css           # Modern tooltip styling
-│   ├── popup.html            # Settings popup
-│   └── popup.js              # Settings logic
-├── assets/
-│   └── icons/                # Extension icons
-└── tests/
-    ├── test-page.html        # Test suite
-    ├── test-detector.html    # Interactive detector test
-    └── TEST_SUITE.md         # Test documentation
-```
-
-### Key Components
-
-**Content Scripts** (`content/`)
-- `detector.js`: Enhanced pattern matching with NLP (V2.0)
-- `converter.js`: Accurate timezone conversion with new features
-- `main.js`: Event handling, confidence filtering, tooltip management
-
-**Background** (`background/`)
-- `service-worker.js`: Settings management, installation/update handlers
-
-**UI** (`ui/`)
-- `tooltip.css`: Dark mode support, modern styling
-- `popup.html/js`: User-friendly settings interface
+### Supported Timezones Include:
+- All US timezones (EST, CST, MST, PST, AKST, HST)
+- European cities (London, Paris, Berlin, Rome, Moscow)
+- Asian cities (Tokyo, Singapore, Hong Kong, Dubai, Mumbai)
+- Pacific (Sydney, Auckland, Perth)
+- And many more!
 
 ---
 
 ## 🧪 Testing
 
+### Comprehensive Test Suite
+Open `tests/comprehensive-test.html` in Chrome to test:
+- Basic time format detection
+- Natural language processing
+- City-based timezone detection
+- UTC offset handling
+- Edge cases and error handling
+- Performance with large text blocks
+- Security (XSS prevention)
+- Interactive elements (contenteditable, inputs)
+
 ### Quick Test
-
-1. Open `tests/test-detector.html` in Chrome
-2. Try these examples:
-   ```
-   Meeting tomorrow at 3pm EST
-   Call me in 2 hours PST
-   Let's meet next Monday at 10am
-   Conference at 10:30 +05:30
-   ```
-
-### Test Page
-
-Open `tests/test-page.html` for comprehensive test cases:
-
-```html
-Let's do a call at Noon EST
-Meeting tomorrow at 3pm EST
-Start in 2 hours PST
-Next Monday 10am EST
-Conference at 10:30 +05:30
-```
-
-### Manual Testing Checklist
-
-- [ ] Natural language detection
-- [ ] Shortform detection
-- [ ] Relative time calculation
-- [ ] UTC offset conversion
-- [ ] City-based timezone detection
-- [ ] Confidence filtering
-- [ ] Tooltip positioning
-- [ ] Settings sync
-- [ ] Gmail/Slack compatibility
-
----
-
-## ⚙️ Configuration Options
-
-### CONFIG (in main.js)
-```javascript
-{
-  hoverDelay: 300,        // ms before hover detection
-  maxTextLength: 500,     // max text to process
-  debounceDelay: 150,     // event debounce
-  tooltipOffset: 12,      // pixels from cursor
-  minConfidence: 70,      // minimum confidence (0-100)
-  showConfidence: true    // show confidence in tooltip
-}
-```
-
-### Customization
-
-**Change Confidence Threshold:**
-Edit `CONFIG.minConfidence` in `main.js` (default: 70%)
-
-**Add Timezone:**
-Add to `timezoneMap` in `detector.js`:
-```javascript
-'ABBR': 'IANA/Timezone'
-```
-
-**Modify Tooltip Style:**
-Edit `ui/tooltip.css` for colors, fonts, animations
-
----
-
-## 📊 Performance
-
-### Benchmarks
-- **Detection Speed**: <1ms (cached), ~2-5ms (uncached)
-- **Cache Hit Rate**: ~85% for repeated queries
-- **Memory Usage**: <5MB
-- **Network Requests**: 0 (fully offline)
-
-### Optimization Features
-- 100-entry LRU cache
-- Priority-based pattern matching
-- Debounced event handlers
-- Early exit strategies
-- Text length limiting (5000 chars)
+Select any of these to test: "Meeting at 3pm EST", "tomorrow at noon PST", "10:30 +05:30"
 
 ---
 
 ## 🔒 Privacy & Security
 
-- ✅ **No Data Collection**: Everything runs locally
-- ✅ **No External Requests**: Pure client-side processing
-- ✅ **No Tracking**: Zero analytics or telemetry
-- ✅ **Settings Sync**: Optional Chrome Sync only
-- ✅ **Open Source**: Full transparency
+- **No Data Collection**: The extension doesn't collect or transmit any data
+- **Local Processing**: All timezone conversions happen on your device
+- **No External APIs**: No network requests are made
+- **XSS Protection**: All content is sanitized before display
+- **Open Source**: Full code transparency
 
 ---
 
 ## 🐛 Troubleshooting
 
 ### Tooltip Not Appearing?
+1. Ensure the extension is enabled (check the toggle in the popup)
+2. Make sure you're selecting text that contains time information
+3. Release the mouse button after selection
+4. Check if the page has special restrictions (some banking sites block extensions)
 
-**Check:**
-1. Extension is enabled (click icon)
-2. Text contains recognized pattern
-3. Confidence score >70% (check console)
-4. No conflicting extensions
+### Tooltip Not Disappearing?
+1. Click anywhere on the page
+2. Press the ESC key
+3. Select different text
+4. Scroll the page
 
-**Solution:**
-- Reload extension
-- Try different text patterns
-- Check browser console for logs
-
-### Incorrect Conversions?
-
-**Check:**
-1. Source timezone is correct
-2. Date inference is accurate
-3. "Assumptions" in tooltip
-
-**Solution:**
-- Include explicit timezone
-- Provide full date
-- Report issue with example
-
-### Performance Issues?
-
-**Check:**
-1. Chrome Task Manager
-2. Other active extensions
-3. Page complexity
-
-**Solution:**
-- Clear browser cache
-- Disable other extensions
-- Reduce hover sensitivity
+### Wrong Timezone?
+1. Click the extension icon
+2. Select your preferred timezone from the dropdown
+3. Click "Save Settings"
 
 ---
 
-## 🎓 API Reference
+## 🛠️ Technical Details
 
-### DateTimeDetector
+### Architecture
+- **Content Script**: Handles text selection and tooltip display
+- **Detector Module**: Pattern matching and natural language processing
+- **Converter Module**: Timezone conversion logic
+- **Background Service Worker**: Settings management and persistence
 
-```javascript
-const detector = new DateTimeDetector();
-
-// Single match (fast)
-const result = detector.detect(text);
-
-// All matches
-const results = detector.detect(text, true);
-```
-
-**Methods:**
-- `detect(text, findAll)`: Detect patterns
-- `clearCache()`: Clear detection cache
-- `getCacheStats()`: Get cache statistics
-
-### TimeZoneConverter
-
-```javascript
-const converter = new TimeZoneConverter();
-const result = converter.convert(parsed, targetTimezone);
-```
-
-**Methods:**
-- `convert(parsed, targetTimezone)`: Convert timezone
-- `getTimezoneDisplay(iana)`: Get timezone abbreviation
+### Performance
+- Debounced event handlers (100ms)
+- Caching for repeated conversions
+- Efficient DOM manipulation
+- Lazy loading of resources
 
 ---
 
 ## 📝 Changelog
 
-### Version 5.1.0 (Current)
-**Major Update - Enhanced Intelligence**
+### Version 5.2.1 (Current)
+- Fixed: Tooltip now only appears after mouse button release
+- Fixed: Proper cleanup of tooltips on deselection
+- Fixed: Prevented multiple overlapping tooltips
+- Added: Welcome page for new users
+- Added: Better error handling and state management
+- Added: Keyboard shortcuts (ESC to dismiss)
+- Improved: Overall performance and responsiveness
 
-#### Added
-- ✨ Natural language processing
-- ✨ Shortform detection
-- ✨ Relative time calculation
-- ✨ UTC offset support
-- ✨ City-based timezone detection
-- ✨ Confidence scoring system
-- ✨ 100+ timezone support
-- ✨ Performance caching
-
-#### Improved
-- ⚡ Detection accuracy (95%+ for explicit patterns)
-- ⚡ Processing speed (100x faster for cached)
-- ⚡ User experience (confidence-based filtering)
-- ⚡ Tooltip information display
-
-#### Fixed
-- 🐛 Edge cases in date parsing
-- 🐛 Timezone DST handling
-- 🐛 Tooltip positioning issues
-
-### Version 5.0.0
-- Complete rewrite with modular architecture
-- Improved detection accuracy
-- Modern UI with dark mode
-- Viewport-aware positioning
-- Accessibility improvements
+### Version 5.1.1
+- Removed hover detection (selection-only mode)
+- Added natural language support
+- Improved confidence scoring
+- Performance optimizations
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-1. **Fork** the repository
-2. **Create** a feature branch
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit** your changes
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-4. **Push** to the branch
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow existing code style
-- Add tests for new features
-- Update documentation
-- Test across browsers
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-MIT License - See [LICENSE](LICENSE) for details
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 👥 Support
+
+If you encounter any issues or have suggestions:
+1. Check the [Troubleshooting](#-troubleshooting) section
+2. Open an issue on GitHub
+3. Contact the development team
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Built with ❤️ for global teams
-- Powered by native JavaScript Intl API
-- Inspired by timezone challenges in remote work
+- Built with modern JavaScript and Chrome Extension APIs
+- Timezone data from IANA Time Zone Database
+- Icons from the Chrome Extension community
+- Inspired by the need for seamless global collaboration
 
 ---
 
-## 📞 Support
-
-- 🐛 [Report Issues](https://github.com/...)
-- 💡 [Request Features](https://github.com/...)
-- 📖 [Documentation](./content/detector-documentation.md)
-- ❓ [Quick Reference](./content/QUICK-REFERENCE.md)
-
----
-
-## 🌟 Show Your Support
-
-If you find this extension helpful, please:
-- ⭐ Star the repository
-- 🔗 Share with your team
-- 📝 Leave a review
-- 🐛 Report bugs
-- 💡 Suggest features
-
----
-
-**Built for developers, by developers. Making global collaboration seamless.**
-
----
-
-*Last updated: October 2025 | Version 5.1.0*
+<p align="center">Made with ❤️ for global teams and remote workers</p>

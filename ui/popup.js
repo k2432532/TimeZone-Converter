@@ -81,7 +81,10 @@ async function loadSettings() {
 }
 
 function populateTimezones() {
-  timezoneSelect.innerHTML = '';
+  // Clear existing options safely
+  while (timezoneSelect.firstChild) {
+    timezoneSelect.removeChild(timezoneSelect.firstChild);
+  }
 
   const currentTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const isCurrentInList = COMMON_TIMEZONES.some(tz => tz.value === currentTz);
