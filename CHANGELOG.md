@@ -88,4 +88,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 2. Update version in `README.md`
 3. Update this CHANGELOG.md
 4. Create git tag: `git tag -a v5.2.1 -m "Release version 5.2.1"`
-5. Push to repository: `git push origin main --tags`
+5. Push to repository: `git push origin main --tags`# Version 5.2.4 - Date Bug Fix
+
+## Fixed
+- **Date off-by-one bug**: Fixed issue where "11 Oct 7 PM EST" was showing as Oct 10 instead of Oct 11
+- Improved date comparison logic to handle current-day dates correctly
+
+## Technical Changes
+- `detector.js`: Updated `parseDayMonthTimeTz()` function to properly compare dates
+- `detector.js`: Fixed similar logic in `parseTimeTzOnDate()` function
+
+---
+

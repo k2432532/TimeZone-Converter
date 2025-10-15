@@ -188,7 +188,7 @@ function showStatus(message, isError = false) {
   statusMessage.textContent = message;
   // grayscale backgrounds for status (no colored tints)
   statusMessage.style.background = isError ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.06)';
-  statusMessage.style.color = isError ? '#000' : '#000';
+  statusMessage.style.color = isError ? '#fff' : '#fff';
   statusMessage.classList.add('show');
 
   setTimeout(() => {

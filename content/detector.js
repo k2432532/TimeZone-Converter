@@ -487,7 +487,8 @@ class DateTimeDetector {
       year = now.getFullYear();
       
       // If the day has passed this month, assume next month or next year
-      if (month === now.getMonth() + 1 && dayNumber < now.getDate()) {
+      // BUT only if the month was inferred, not explicitly stated
+      if (!monthMatch && month === now.getMonth() + 1 && dayNumber <= now.getDate()) {
         month++;
         if (month > 12) {
           month = 1;
@@ -543,8 +544,10 @@ class DateTimeDetector {
     
     // If no year provided and the date has passed this year, assume next year
     if (!yearStr) {
-      const thisYearDate = new Date(year, month - 1, dayNumber);
-      if (thisYearDate < now) {
+      // Create date at end of the day for proper comparison
+      const thisYearDate = new Date(year, month - 1, dayNumber, 23, 59, 59);
+      const todayEndOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+      if (thisYearDate < todayEndOfDay) {
         year++;
       }
     }
