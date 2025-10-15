@@ -176,6 +176,13 @@ class DateTimeDetector {
         priority: 4
       },
 
+      // UTC offset with date: "2:15 AM UTC+5:30 on 01/12/2025"
+      {
+        pattern: /\b((?:1[0-2]|0?[1-9])(?::[0-5][0-9])?(?::[0-5][0-9])?\s*(?:AM|PM|am|pm)|(?:2[0-3]|[01]?[0-9]):[0-5][0-9](?::[0-5][0-9])?)\s*(?:UTC|GMT)\s*([+-]\d{1,2}:?\d{2})\s+on\s+(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})\b/gi,
+        type: 'time_utc_offset_with_date',
+        priority: 3
+      },
+
       // Standard: "Oct 9, 2025 at 10:30 AM EST" OR "2025-07-18 18:15:23 EST"
       {
         pattern: new RegExp(
@@ -349,6 +356,8 @@ class DateTimeDetector {
         return this.parseDayMonthTimeTz(match);
       case 'time_utc_offset':
         return this.parseUTCOffset(match);
+      case 'time_utc_offset_with_date':
+        return this.parseUTCOffsetWithDate(match);
       case 'datetime_with_tz':
         return this.parseMatch(match, type);
       case 'time_with_tz':
@@ -589,6 +598,72 @@ class DateTimeDetector {
       },
       date: null,
       hasDate: false,
+      hasTime: !!time,
+      hasTimezone: true
+    };
+  }
+
+  /**
+   * Parse UTC offset with date: "2:15 AM UTC+5:30 on 01/12/2025"
+   * Pattern captures: timeStr, offsetStr, day, month, year
+   */
+  parseUTCOffsetWithDate(match) {
+    const timeStr = match[1];
+    const offsetStr = match[2];
+    const firstNum = parseInt(match[3]);
+    const secondNum = parseInt(match[4]);
+    let yearNum = parseInt(match[5]);
+    
+    // Parse time
+    const time = this.parseTime(timeStr);
+    const offset = this.parseUTCOffsetString(offsetStr);
+    
+    // Handle 2-digit year
+    if (yearNum < 100) {
+      yearNum += 2000;
+    }
+    
+    // Intelligent date parsing based on separator and values
+    let day, month;
+    const separator = match[0].match(/(\d{1,2})([\/-\.])(\d{1,2})/)[2];
+    
+    // Determine format based on values and separator
+    if (firstNum > 12) {
+      // First number > 12, must be DD/MM/YYYY
+      day = firstNum;
+      month = secondNum;
+    } else if (secondNum > 12) {
+      // Second number > 12, must be MM/DD/YYYY
+      month = firstNum;
+      day = secondNum;
+    } else {
+      // Ambiguous - use separator hint
+      if (separator === '/') {
+        // Slash typically indicates US format MM/DD/YYYY
+        month = firstNum;
+        day = secondNum;
+      } else {
+        // Dash or dot typically indicates European format DD/MM/YYYY
+        day = firstNum;
+        month = secondNum;
+      }
+    }
+
+    return {
+      time,
+      timezone: {
+        abbreviation: `UTC${offsetStr}`,
+        iana: 'UTC',
+        offset: offset,
+        display: `UTC${offsetStr}`
+      },
+      date: {
+        year: yearNum,
+        month: month,
+        day: day,
+        format: separator === '/' ? 'MM/DD/YYYY' : 'DD/MM/YYYY'
+      },
+      hasDate: true,
       hasTime: !!time,
       hasTimezone: true
     };

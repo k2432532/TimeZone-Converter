@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Debug UTC Pattern</title>
+</head>
+<body>
+  <h1>Testing UTC+5:30 Pattern</h1>
+  <div id="results"></div>
+  
+  <script src="content/detector.js"></script>
+  <script>
+    const detector = new DateTimeDetector();
+    const testCases = [
+      "2:15 AM UTC+5:30 on 01/12/2025",
+      "2:15 AM UTC+5:30",
+      "01/12/2025 at 2:15 AM",
+      "Dec 1, 2025 at 2:15 AM",
+      "2:15 AM on 01/12/2025"
+    ];
+    
+    let html = "<h2>Detection Results:</h2>";
+    testCases.forEach(test => {
+      console.log(`\nTesting: "${test}"`);
+      const result = detector.detect(test);
+      console.log('Result:', result);
+      
+      if (result && result.parsed) {
+        const p = result.parsed;
+        html += `<div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc;">`;
+        html += `<b>Input:</b> ${test}<br>`;
+        html += `<b>Pattern Type:</b> ${result.type}<br>`;
+        html += `<b>Matched:</b> "${result.matched}"<br>`;
+        html += `<b>Confidence:</b> ${result.confidence}%<br>`;
+        if (p.date) {
+          html += `<b>Date:</b> ${p.date.month}/${p.date.day}/${p.date.year}<br>`;
+        }
+        if (p.time) {
+          html += `<b>Time:</b> ${p.time.hours}:${String(p.time.minutes).padStart(2,'0')}<br>`;
+        }
+        if (p.timezone) {
+          html += `<b>Timezone:</b> ${p.timezone.display || p.timezone.iana}<br>`;
+        }
+        html += `</div>`;
+      } else {
+        html += `<div style="margin: 10px 0;"><b>${test}</b> → NO DETECTION</div>`;
+      }
+    });
+    
+    document.getElementById('results').innerHTML = html;
+  </script>
+</body>
+</html>

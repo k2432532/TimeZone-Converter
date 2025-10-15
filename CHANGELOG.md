@@ -88,7 +88,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 2. Update version in `README.md`
 3. Update this CHANGELOG.md
 4. Create git tag: `git tag -a v5.2.1 -m "Release version 5.2.1"`
-5. Push to repository: `git push origin main --tags`# Version 5.2.4 - Date Bug Fix
+5. Push to repository: `git push origin main --tags`# Version 5.2.5 - UTC Offset with Date Support
+
+## Added
+- **New Pattern Support**: Added detection for "TIME UTC+OFFSET on DATE" format
+  - Example: "2:15 AM UTC+5:30 on 01/12/2025" now correctly detected
+- **Intelligent Date Format Detection**: Automatically determines MM/DD vs DD/MM format based on:
+  - Number values (if day > 12 or month > 12)
+  - Separator hints (/ = US format, - or . = EU format)
+
+## Fixed
+- UTC offset patterns with dates now parse correctly
+- Improved date parsing logic for numeric date formats
+
+## Technical Changes
+- Added new pattern type: `time_utc_offset_with_date` with priority 3
+- Added `parseUTCOffsetWithDate()` function in detector.js
+- Enhanced converter.js to handle UTC offset with date conversions
+- Updated claude.md documentation
+
+---
+
+# Version 5.2.4 - Date Bug Fix
 
 ## Fixed
 - **Date off-by-one bug**: Fixed issue where "11 Oct 7 PM EST" was showing as Oct 10 instead of Oct 11
