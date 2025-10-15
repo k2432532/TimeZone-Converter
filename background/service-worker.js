@@ -1,5 +1,5 @@
 /**
- * Background Service Worker V5.2.2
+ * Background Service Worker V5.2.3
  * Enhanced with onboarding and better error handling
  */
 
@@ -7,7 +7,7 @@
 const DEFAULT_SETTINGS = {
   enabled: true,
   targetTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  version: '5.2.2'
+  version: '5.2.3'
 };
 
 /**
@@ -98,7 +98,7 @@ function showUpdateNotification() {
       type: 'basic',
       iconUrl: chrome.runtime.getURL('assets/icon128.png'),
       title: 'TimeZone Converter Updated!',
-      message: 'Version 5.2.2: Fixed CSP errors and updated UI to grayscale theme.',
+      message: 'Version 5.2.3: Fixed ISO datetime detection and Google Sheets tooltip cleanup.',
       buttons: [
         { title: 'See What\'s New' }
       ],

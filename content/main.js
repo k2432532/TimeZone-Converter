@@ -30,6 +30,14 @@
   let tooltipTimer = null;
   let isMouseDown = false;  // Track mouse button state
   let selectionMade = false; // Track if valid selection was made
+  let selectionValidatorInterval = null; // Periodic validator for platforms like Google Sheets
+
+  // Detect if we're on a platform that needs special handling
+  const isGoogleWorkspace = window.location.hostname.includes('docs.google.com') || 
+                           window.location.hostname.includes('sheets.google.com') ||
+                           window.location.hostname.includes('slides.google.com');
+  const needsAggressiveCleanup = isGoogleWorkspace || 
+                                 document.querySelector('[contenteditable]') !== null;
 
   /**
    * Initialize extension
@@ -51,6 +59,12 @@
     // Setup event listeners
     setupEventListeners();
     
+    // For Google Sheets/Docs, start periodic selection validator
+    if (needsAggressiveCleanup) {
+      startSelectionValidator();
+      console.log('[TimeZone Converter V5.2] Started selection validator for Google Workspace');
+    }
+    
     console.log('[TimeZone Converter V5.2] Ready! Select text to convert times.');
   }
 
@@ -66,6 +80,51 @@
     } catch (error) {
       console.log('[TimeZone Converter V5.2] Using default settings');
     }
+  }
+
+  /**
+   * Start periodic selection validator for Google Sheets/Docs
+   * Checks every 300ms if selection is still valid and hides tooltip if not
+   */
+  function startSelectionValidator() {
+    // Clear any existing validator
+    if (selectionValidatorInterval) {
+      clearInterval(selectionValidatorInterval);
+    }
+    
+    selectionValidatorInterval = setInterval(() => {
+      // Only validate if we have a tooltip showing
+      if (!tooltip || !tooltip.parentNode) return;
+      
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      
+      // Hide if no selection
+      if (!selectedText || selectedText.length === 0) {
+        hideTooltipImmediately();
+        selectionMade = false;
+        lastProcessedText = '';
+        return;
+      }
+      
+      // Check if selection rect is valid
+      if (selection.rangeCount > 0) {
+        try {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          
+          // If selection is collapsed (no width/height), hide tooltip
+          if (rect.width === 0 && rect.height === 0) {
+            hideTooltipImmediately();
+            selectionMade = false;
+            lastProcessedText = '';
+          }
+        } catch (err) {
+          // If we can't get rect, hide tooltip
+          hideTooltipImmediately();
+        }
+      }
+    }, 300); // Check every 300ms
   }
 
   /**
@@ -150,6 +209,7 @@
 
   /**
    * Handle selection change - only process if mouse is not down
+   * Enhanced for Google Sheets/Docs and similar platforms
    */
   function handleSelectionChange() {
     if (!isEnabled || isMouseDown) return;
@@ -173,6 +233,14 @@
       try {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
+        
+        // Check if selection rect is valid (not collapsed)
+        if (rect.width === 0 && rect.height === 0) {
+          hideTooltipImmediately();
+          selectionMade = false;
+          return;
+        }
+        
         const x = rect.left + rect.width / 2 + window.scrollX;
         const y = rect.top + window.scrollY;
         
@@ -185,16 +253,39 @@
 
   /**
    * Handle click events - hide tooltip if clicking outside selection
+   * Enhanced for Google Sheets and similar platforms
    */
   function handleClick(e) {
     // Don't hide if clicking on the tooltip itself
     if (tooltip && tooltip.contains(e.target)) return;
     
-    // Check if click is outside current selection
-    const selection = window.getSelection();
-    if (!selection.toString().trim()) {
-      hideTooltipImmediately();
-    }
+    // For Google Sheets/Docs, be more aggressive about cleanup
+    // Give a small delay to allow selection to update
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const selectedText = selection.toString().trim();
+      
+      // Hide if no selection OR selection rect is collapsed
+      if (!selectedText) {
+        hideTooltipImmediately();
+        selectionMade = false;
+        lastProcessedText = '';
+      } else if (selection.rangeCount > 0) {
+        try {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          // If selection is collapsed (width/height = 0), hide tooltip
+          if (rect.width === 0 && rect.height === 0) {
+            hideTooltipImmediately();
+            selectionMade = false;
+            lastProcessedText = '';
+          }
+        } catch (err) {
+          // If we can't get rect, hide tooltip to be safe
+          hideTooltipImmediately();
+        }
+      }
+    }, 10);
   }
 
   /**
