@@ -179,8 +179,8 @@ class DateTimeDetector {
       // Standard: "Oct 9, 2025 at 10:30 AM EST" OR "2025-07-18 18:15:23 EST"
       {
         pattern: new RegExp(
-          `\\b(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?,?\\s+\\d{4}|` +
-          `\\d{4}-\\d{2}-\\d{2}|\\d{1,2}/\\d{1,2}/\\d{2,4})` +
+          `\\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?,?\\s+\\d{4}|` +
+          `\\d{4}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{1,2}[-/.]\\d{1,2}[-/.]\\d{2,4})` +
           `\\s*(?:at|@)?\\s*` +
           `((?:1[0-2]|0?[1-9])(?::[0-5][0-9])?(?::[0-5][0-9])?\\s*(?:AM|PM|am|pm)|(?:2[0-3]|[01]?[0-9]):[0-5][0-9](?::[0-5][0-9])?)` +
           `\\s*(?:in\\s+)?(${tzKeys})?`,
@@ -745,26 +745,15 @@ class DateTimeDetector {
    * Parse matched date/time string (enhanced for ISO 8601)
    */
   parseMatch(match, type) {
-    const fullText = match[0];
     let timeStr, tzStr, dateStr = null;
 
     if (type === 'datetime_with_tz') {
-      // Try ISO 8601 format first: YYYY-MM-DD HH:MM:SS TZ
-      const isoMatch = fullText.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}:\d{2}(?::\d{2})?)\s+([A-Z][A-Za-z\s/+-]*?)$/i);
-      if (isoMatch) {
-        dateStr = isoMatch[1];  // 2025-07-18
-        timeStr = isoMatch[2];  // 18:15:23
-        tzStr = isoMatch[3];    // EST
-      } else {
-        // Try other formats with optional "at/@" separator
-        const parts = fullText.match(/^(.+?)\s*(?:at|@)?\s*(\d{1,2}(?::\d{2}){0,2}\s*(?:AM|PM|am|pm)?)\s+(?:in\s+)?([A-Z][A-Za-z\s/+-]*?)$/i);
-        if (parts) {
-          dateStr = parts[1];  // Date part (text, slash, etc.)
-          timeStr = parts[2];  // Time part
-          tzStr = parts[3];    // Timezone
-        }
-      }
+      // Date is now captured in group 1, time in group 2, timezone in group 3
+      dateStr = match[1];
+      timeStr = match[2];
+      tzStr = match[3];
     } else {
+      // For time_with_tz: time is in group 1, timezone in group 2
       timeStr = match[1];
       tzStr = match[2];
     }
