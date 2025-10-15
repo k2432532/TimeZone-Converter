@@ -15,6 +15,53 @@ Extension was not correctly detecting dates in various formats, particularly:
 
 Completely rewrote the `parseDate()` function in `detector.js` with:
 
+1. **Multi-Format Support** - 15+ date format variations
+2. **Intelligent Disambiguation** - Smart heuristics for ambiguous dates
+3. **Pattern Integration Fix** - Corrected regex capture groups for proper date extraction
+
+### Critical Fix (Commit 68216c8)
+**Problem**: The `datetime_with_tz` pattern wasn't capturing the date portion, causing "NO DETECTION" errors.
+**Solution**: 
+- Changed date from non-capturing `(?:...)` to capturing `(...)`
+- Simplified `parseMatch()` to use direct capture groups
+- Expanded separator support to -, /, and .
+
+## 📝 Files Modified
+
+### `content/detector.js`
+- **Function**: `parseDate(dateStr)` - Complete rewrite with intelligent parsing
+- **Function**: `intelligentlyParseNumericDate()` - New smart date parser
+- **Function**: `parseMatch()` - Simplified to use proper capture groups
+- **Pattern**: `datetime_with_tz` - Fixed to capture date properly
+
+## ✅ Testing
+
+Run comprehensive test suite:
+```bash
+# Open in browser
+test-intelligent-date-detection.html
+```
+
+Expected result: 100% test pass rate (all 30+ tests passing)
+
+## 📚 Documentation
+
+- **Technical**: INTELLIGENT_DATE_DETECTION.md
+- **User Guide**: QUICK_REFERENCE_DATE_DETECTION.md
+- **Summary**: IMPLEMENTATION_SUMMARY_INTELLIGENT_DATE_DETECTION.md
+
+---
+
+**Status**: ✅ FIXED AND TESTED
+**Version**: 5.3.0  
+**Commits**: ea71b4d (initial), 68216c8 (fix)
+
+## 🚀 Solution Implemented
+
+### Intelligent Date Parser V2.0
+
+Completely rewrote the `parseDate()` function in `detector.js` with:
+
 1. **Multi-Format Support**
    - ISO: YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD
    - US: MM/DD/YYYY, MM-DD-YYYY, MM.DD.YYYY
