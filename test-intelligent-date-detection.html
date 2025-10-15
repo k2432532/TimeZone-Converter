@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligent Date Detection Test Suite</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    h1 {
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    }
+    
+    h2 {
+      color: #764ba2;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    
+    .test-category {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    
+    .test-case {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .test-case:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-color: #667eea;
+    }
+    
+    .test-input {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #e83e8c;
+      padding: 8px;
+      background: #fff3cd;
+      border-radius: 4px;
+      margin: 5px 0;
+      display: inline-block;
+    }
+    
+    .result {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    
+    .result.success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    
+    .result.partial {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      color: #856404;
+    }
+    
+    .result.error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    
+    .detected-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .info-item {
+      background: white;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+    }
+    
+    .info-label {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+      margin-top: 3px;
+      font-family: 'Courier New', monospace;
+      color: #333;
+    }
+    
+    .confidence-bar {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f44336, #ff9800, #4caf50);
+      transition: width 0.3s ease;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 20px 10px 20px 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .summary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Intelligent Date Detection Test Suite</h1>
+    <p style="color: #666; margin-bottom: 30px;">
+      Testing the enhanced date parser that intelligently detects various date formats including 
+      ISO (YYYY-MM-DD), US (MM/DD/YYYY), European (DD/MM/YYYY), and text-based formats with multiple separators.
+    </p>
+
+    <button onclick="runAllTests()">🚀 Run All Tests</button>
+    <button onclick="location.reload()" style="background: #6c757d;">🔄 Reset</button>
+
+    <div id="summary" style="display: none;"></div>
+    <div id="results"></div>
+  </div>
+
+  <script src="content/detector.js"></script>
+  <script>
+    const detector = new DateTimeDetector();
+
+    const testCases = [
+      {
+        category: '📅 ISO Format (International Standard)',
+        tests: [
+          { 
+            input: '2025-07-18 18:15:23 EST',
+            expected: { year: 2025, month: 7, day: 18, format: 'YYYY-MM-DD' }
+          },
+          { 
+            input: '2025-10-15 14:30 PST',
+            expected: { year: 2025, month: 10, day: 15, format: 'YYYY-MM-DD' }
+          },
+          { 
+            input: '2025/12/31 23:59:59 UTC',
+            expected: { year: 2025, month: 12, day: 31, format: 'YYYY-MM-DD' }
+          },
+          { 
+            input: '2025.03.25 10:00 AM IST',
+            expected: { year: 2025, month: 3, day: 25, format: 'YYYY-MM-DD' }
+          }
+        ]
+      },
+      {
+        category: '🇺🇸 US Format (MM/DD/YYYY)',
+        tests: [
+          { 
+            input: '10/15/2025 at 3:45 PM EST',
+            expected: { year: 2025, month: 10, day: 15, format: 'MM/DD/YYYY' }
+          },
+          { 
+            input: '03/04/2025 9:00 AM PST',
+            expected: { year: 2025, month: 3, day: 4, format: 'MM/DD/YYYY' }
+          },
+          { 
+            input: '12-25-2025 12:00 PM EST',
+            expected: { year: 2025, month: 12, day: 25, format: 'MM-DD-YYYY' }
+          }
+        ]
+      },
+      {
+        category: '🇪🇺 European Format (DD/MM/YYYY)',
+        tests: [
+          { 
+            input: '25/12/2025 at 10:30 GMT',
+            expected: { year: 2025, month: 12, day: 25, format: 'DD-MM-YYYY' }
+          },
+          { 
+            input: '15-10-2025 14:00 CET',
+            expected: { year: 2025, month: 10, day: 15, format: 'DD-MM-YYYY' }
+          },
+          { 
+            input: '31.12.2025 23:59 EET',
+            expected: { year: 2025, month: 12, day: 31, format: 'DD-MM-YYYY' }
+          }
+        ]
+      },
+      {
+        category: '🔍 Ambiguous Dates (Auto-Detection)',
+        tests: [
+          { 
+            input: '13/10/2025 9:00 AM EST',
+            description: 'Day > 12, clearly DD/MM/YYYY',
+            expected: { year: 2025, month: 10, day: 13, format: 'DD-MM-YYYY' }
+          },
+          { 
+            input: '10/13/2025 9:00 AM EST',
+            description: 'Month > 12, clearly MM/DD/YYYY',
+            expected: { year: 2025, month: 10, day: 13, format: 'MM-DD-YYYY' }
+          },
+          { 
+            input: '05/06/2025 at 2pm PST',
+            description: 'Ambiguous: Using separator hint (/ = US format)',
+            expected: { year: 2025, month: 5, day: 6, format: 'MM/DD/YYYY' }
+          },
+          { 
+            input: '05-06-2025 at 2pm PST',
+            description: 'Ambiguous: Using separator hint (- = European format)',
+            expected: { year: 2025, month: 6, day: 5, format: 'DD-MM-YYYY' }
+          }
+        ]
+      },
+      {
+        category: '📝 Text Month Formats',
+        tests: [
+          { 
+            input: 'Oct 15, 2025 at 6:15 PM EST',
+            expected: { year: 2025, month: 10, day: 15, format: 'text_month_first' }
+          },
+          { 
+            input: '15 October 2025 18:15 EST',
+            expected: { year: 2025, month: 10, day: 15, format: 'text_day_first' }
+          },
+          { 
+            input: 'Dec 25th, 2025 10:30 AM PST',
+            expected: { year: 2025, month: 12, day: 25, format: 'text_month_first' }
+          },
+          { 
+            input: '31st December 2025 11:59 PM GMT',
+            expected: { year: 2025, month: 12, day: 31, format: 'text_day_first' }
+          }
+        ]
+      },
+      {
+        category: '🔄 Reverse ISO Format (YYYY/DD/MM)',
+        tests: [
+          { 
+            input: '2025/25/12 10:30 EST',
+            description: 'Day > 12, detected as YYYY/DD/MM',
+            expected: { year: 2025, month: 12, day: 25, format: 'YYYY-DD-MM' }
+          },
+          { 
+            input: '2025/15/10 14:00 PST',
+            description: 'Day > 12, detected as YYYY/DD/MM',
+            expected: { year: 2025, month: 10, day: 15, format: 'YYYY-DD-MM' }
+          }
+        ]
+      },
+      {
+        category: '📆 Two-Digit Years',
+        tests: [
+          { 
+            input: '10/15/25 at 3:45 PM EST',
+            expected: { year: 2025, month: 10, day: 15, format: 'MM/DD/YY' }
+          },
+          { 
+            input: '15-10-25 14:00 CET',
+            expected: { year: 2025, month: 10, day: 15, format: 'DD-MM-YY' }
+          }
+        ]
+      },
+      {
+        category: '🌍 Mixed Separator Formats',
+        tests: [
+          { 
+            input: '2025.07.18 18:15 EST',
+            expected: { year: 2025, month: 7, day: 18, format: 'YYYY-MM-DD' }
+          },
+          { 
+            input: '25.12.2025 10:30 GMT',
+            expected: { year: 2025, month: 12, day: 25, format: 'DD-MM-YYYY' }
+          }
+        ]
+      }
+    ];
+
+    function runAllTests() {
+      const resultsDiv = document.getElementById('results');
+      const summaryDiv = document.getElementById('summary');
+      resultsDiv.innerHTML = '';
+      
+      let totalTests = 0;
+      let passedTests = 0;
+      let failedTests = 0;
+
+      testCases.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'test-category';
+        categoryDiv.innerHTML = `<h2>${category.category}</h2>`;
+
+        category.tests.forEach(test => {
+          totalTests++;
+          const testDiv = document.createElement('div');
+          testDiv.className = 'test-case';
+          
+          const inputDiv = document.createElement('div');
+          inputDiv.innerHTML = `<strong>Input:</strong> <span class="test-input">${test.input}</span>`;
+          if (test.description) {
+            inputDiv.innerHTML += `<br><em style="color: #666; font-size: 12px;">${test.description}</em>`;
+          }
+          testDiv.appendChild(inputDiv);
+
+          // Run detection
+          const detected = detector.detect(test.input);
+          
+          const resultDiv = document.createElement('div');
+          
+          if (detected && detected.parsed && detected.parsed.date) {
+            const date = detected.parsed.date;
+            const isMatch = date.year === test.expected.year && 
+                           date.month === test.expected.month && 
+                           date.day === test.expected.day;
+            
+            if (isMatch) {
+              passedTests++;
+              resultDiv.className = 'result success';
+              resultDiv.innerHTML = `
+                <div style="font-weight: bold;">✅ PASSED</div>
+                <div class="detected-info">
+                  <div class="info-item">
+                    <div class="info-label">Detected Date</div>
+                    <div class="info-value">${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Format Detected</div>
+                    <div class="info-value">${date.format || 'N/A'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Confidence</div>
+                    <div class="info-value">${date.confidence || detected.confidence || 'N/A'}%</div>
+                    <div class="confidence-bar">
+                      <div class="confidence-fill" style="width: ${date.confidence || detected.confidence || 0}%"></div>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Intelligent Parse</div>
+                    <div class="info-value">${date.intelligent ? '🧠 Yes' : 'Standard'}</div>
+                  </div>
+                </div>
+              `;
+            } else {
+              failedTests++;
+              resultDiv.className = 'result error';
+              resultDiv.innerHTML = `
+                <div style="font-weight: bold;">❌ FAILED</div>
+                <div style="margin-top: 10px;">
+                  <strong>Expected:</strong> ${test.expected.year}-${String(test.expected.month).padStart(2, '0')}-${String(test.expected.day).padStart(2, '0')} (${test.expected.format})<br>
+                  <strong>Got:</strong> ${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')} (${date.format || 'unknown'})
+                </div>
+              `;
+            }
+          } else {
+            failedTests++;
+            resultDiv.className = 'result error';
+            resultDiv.innerHTML = `<div style="font-weight: bold;">❌ NO DETECTION</div><div>Failed to detect date/time in input</div>`;
+          }
+          
+          testDiv.appendChild(resultDiv);
+          categoryDiv.appendChild(testDiv);
+        });
+
+        resultsDiv.appendChild(categoryDiv);
+      });
+
+      // Show summary
+      const successRate = ((passedTests / totalTests) * 100).toFixed(1);
+      summaryDiv.style.display = 'block';
+      summaryDiv.className = 'summary';
+      summaryDiv.innerHTML = `
+        <div style="font-size: 24px; margin-bottom: 15px;">📊 Test Summary</div>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-number">${totalTests}</div>
+            <div class="stat-label">Total Tests</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: #4caf50;">${passedTests}</div>
+            <div class="stat-label">Passed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: #f44336;">${failedTests}</div>
+            <div class="stat-label">Failed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">${successRate}%</div>
+            <div class="stat-label">Success Rate</div>
+          </div>
+        </div>
+      `;
+
+      // Scroll to summary
+      summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Auto-run tests on page load
+    window.addEventListener('load', () => {
+      console.log('Intelligent Date Detection Test Suite loaded');
+      console.log('Click "Run All Tests" to start testing');
+    });
+  </script>
+</body>
+</html>

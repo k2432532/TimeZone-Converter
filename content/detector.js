@@ -742,18 +742,27 @@ class DateTimeDetector {
   }
 
   /**
-   * Parse matched date/time string (original logic)
+   * Parse matched date/time string (enhanced for ISO 8601)
    */
   parseMatch(match, type) {
     const fullText = match[0];
     let timeStr, tzStr, dateStr = null;
 
     if (type === 'datetime_with_tz') {
-      const parts = fullText.match(/^(.+?)\s*(?:at|@)?\s*(.+?)\s+(?:in\s+)?([A-Z][A-Za-z\s]*?)$/i);
-      if (parts) {
-        dateStr = parts[1];
-        timeStr = parts[2];
-        tzStr = parts[3];
+      // Try ISO 8601 format first: YYYY-MM-DD HH:MM:SS TZ
+      const isoMatch = fullText.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}:\d{2}(?::\d{2})?)\s+([A-Z][A-Za-z\s/+-]*?)$/i);
+      if (isoMatch) {
+        dateStr = isoMatch[1];  // 2025-07-18
+        timeStr = isoMatch[2];  // 18:15:23
+        tzStr = isoMatch[3];    // EST
+      } else {
+        // Try other formats with optional "at/@" separator
+        const parts = fullText.match(/^(.+?)\s*(?:at|@)?\s*(\d{1,2}(?::\d{2}){0,2}\s*(?:AM|PM|am|pm)?)\s+(?:in\s+)?([A-Z][A-Za-z\s/+-]*?)$/i);
+        if (parts) {
+          dateStr = parts[1];  // Date part (text, slash, etc.)
+          timeStr = parts[2];  // Time part
+          tzStr = parts[3];    // Timezone
+        }
       }
     } else {
       timeStr = match[1];
@@ -816,53 +825,196 @@ class DateTimeDetector {
   }
 
   /**
-   * Parse date string (enhanced with ordinals)
+   * INTELLIGENT DATE PARSER V2.0
+   * Handles multiple date formats with smart detection:
+   * - ISO: YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD
+   * - US: MM/DD/YYYY, MM-DD-YYYY, MM.DD.YYYY
+   * - European: DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
+   * - Reverse: YYYY/DD/MM, YYYY-DD-MM
+   * - Text month: Oct 9, 2025, 9 Oct 2025
+   * 
+   * Uses heuristics to distinguish ambiguous formats intelligently
    */
   parseDate(dateStr) {
     if (!dateStr) return null;
 
-    // ISO format: 2025-10-09
-    const isoMatch = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
-    if (isoMatch) {
-      return {
-        year: parseInt(isoMatch[1]),
-        month: parseInt(isoMatch[2]),
-        day: parseInt(isoMatch[3]),
-        format: 'iso'
-      };
-    }
-
-    // Slash format: 10/09/2025 or 10/09/25
-    const slashMatch = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-    if (slashMatch) {
-      let year = parseInt(slashMatch[3]);
-      if (year < 100) year += 2000; // Handle 2-digit years
-      return {
-        month: parseInt(slashMatch[1]),
-        day: parseInt(slashMatch[2]),
-        year: year,
-        format: 'us'
-      };
-    }
-
-    // Text month: Oct 9, 2025 or Oct 9th, 2025
+    // Text month formats: "Oct 9, 2025", "9 Oct 2025", "October 9th, 2025"
     const monthNames = {
       jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
-      jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+      jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
+      january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
+      july: 7, august: 8, september: 9, october: 10, november: 11, december: 12
     };
     
-    const textMatch = dateStr.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})/i);
-    if (textMatch) {
-      const monthName = textMatch[1].toLowerCase().substring(0, 3);
+    // Format: "Oct 9, 2025" or "Oct 9th, 2025"
+    const textMatch1 = dateStr.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})/i);
+    if (textMatch1) {
+      const monthName = textMatch1[1].toLowerCase();
+      const month = monthNames[monthName.substring(0, 3)];
       return {
-        month: monthNames[monthName],
-        day: parseInt(textMatch[2]),
-        year: parseInt(textMatch[3]),
-        format: 'text'
+        month: month,
+        day: parseInt(textMatch1[2]),
+        year: parseInt(textMatch1[3]),
+        format: 'text_month_first',
+        confidence: 100
       };
+    }
+
+    // Format: "9 Oct 2025" or "9th October, 2025"
+    const textMatch2 = dateStr.match(/(\d{1,2})(?:st|nd|rd|th)?\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s+(\d{4})/i);
+    if (textMatch2) {
+      const monthName = textMatch2[2].toLowerCase();
+      const month = monthNames[monthName.substring(0, 3)];
+      return {
+        day: parseInt(textMatch2[1]),
+        month: month,
+        year: parseInt(textMatch2[3]),
+        format: 'text_day_first',
+        confidence: 100
+      };
+    }
+
+    // Numeric formats with separators (/, -, .)
+    // Capture: number1 separator number2 separator number3
+    const numericMatch = dateStr.match(/(\d{1,4})([-/.])(\d{1,2})\2(\d{1,4})/);
+    if (numericMatch) {
+      const num1 = parseInt(numericMatch[1]);
+      const separator = numericMatch[2];
+      const num2 = parseInt(numericMatch[3]);
+      const num3 = parseInt(numericMatch[4]);
+
+      return this.intelligentlyParseNumericDate(num1, num2, num3, separator);
     }
 
     return null;
+  }
+
+  /**
+   * INTELLIGENT NUMERIC DATE PARSER
+   * Uses heuristics to determine correct date format from ambiguous numeric dates
+   * @param {number} num1 - First number in date
+   * @param {number} num2 - Second number in date
+   * @param {number} num3 - Third number in date
+   * @param {string} separator - Separator used (/, -, .)
+   * @returns {Object} Parsed date with format detection
+   */
+  intelligentlyParseNumericDate(num1, num2, num3, separator) {
+    let year, month, day, format, confidence = 50;
+
+    // RULE 1: Detect year by value (>= 1900 or 4 digits)
+    if (num1 >= 1900 || num1.toString().length === 4) {
+      // Format: YYYY-??-??
+      year = num1;
+      
+      // Determine if it's YYYY-MM-DD or YYYY-DD-MM
+      if (num2 > 12) {
+        // num2 must be day (>12)
+        day = num2;
+        month = num3;
+        format = 'YYYY-DD-MM';
+        confidence = 95; // High confidence - num2 clearly a day
+      } else if (num3 > 12) {
+        // num3 must be day (>12)
+        month = num2;
+        day = num3;
+        format = 'YYYY-MM-DD';
+        confidence = 95; // High confidence - num3 clearly a day
+      } else {
+        // Ambiguous: both num2 and num3 could be month or day
+        // Default to ISO standard: YYYY-MM-DD
+        month = num2;
+        day = num3;
+        format = 'YYYY-MM-DD';
+        confidence = 70; // Medium confidence - ambiguous
+      }
+    } else if (num3 >= 1900 || num3.toString().length === 4) {
+      // Format: ??-??-YYYY
+      year = num3;
+      
+      // Determine if it's MM-DD-YYYY or DD-MM-YYYY
+      if (num1 > 12) {
+        // num1 must be day (>12)
+        day = num1;
+        month = num2;
+        format = 'DD-MM-YYYY';
+        confidence = 95; // High confidence - num1 clearly a day
+      } else if (num2 > 12) {
+        // num2 must be day (>12)
+        month = num1;
+        day = num2;
+        format = 'MM-DD-YYYY';
+        confidence = 95; // High confidence - num2 clearly a day
+      } else {
+        // Ambiguous: Use separator and regional hints
+        // Slash (/) typically indicates US format (MM/DD/YYYY)
+        // Dash (-) or dot (.) more common in European format (DD-MM-YYYY)
+        if (separator === '/') {
+          month = num1;
+          day = num2;
+          format = 'MM/DD/YYYY';
+          confidence = 65; // Medium-low confidence - using separator hint
+        } else {
+          // Default to European format for dash/dot
+          day = num1;
+          month = num2;
+          format = 'DD-MM-YYYY';
+          confidence = 65; // Medium-low confidence - using separator hint
+        }
+      }
+    } else {
+      // Two-digit year or unusual format
+      // Assume num3 is year and needs 2000 added
+      year = num3 < 100 ? num3 + 2000 : num3;
+      
+      // Same logic as above for determining day/month
+      if (num1 > 12) {
+        day = num1;
+        month = num2;
+        format = 'DD-MM-YY';
+        confidence = 85;
+      } else if (num2 > 12) {
+        month = num1;
+        day = num2;
+        format = 'MM-DD-YY';
+        confidence = 85;
+      } else {
+        // Use separator hint for ambiguous dates
+        if (separator === '/') {
+          month = num1;
+          day = num2;
+          format = 'MM/DD/YY';
+          confidence = 60;
+        } else {
+          day = num1;
+          month = num2;
+          format = 'DD-MM-YY';
+          confidence = 60;
+        }
+      }
+    }
+
+    // Validate the parsed date
+    if (month < 1 || month > 12 || day < 1 || day > 31) {
+      console.warn('[Detector] Invalid date values detected:', { year, month, day });
+      return null;
+    }
+
+    // Additional validation: check if day is valid for the month
+    const daysInMonth = [31, (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28, 
+                         31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (day > daysInMonth[month - 1]) {
+      console.warn('[Detector] Invalid day for month:', { year, month, day });
+      return null;
+    }
+
+    return {
+      year: year,
+      month: month,
+      day: day,
+      format: format,
+      confidence: confidence,
+      intelligent: true // Flag indicating this was intelligently parsed
+    };
   }
 
   /**
